@@ -1,8 +1,8 @@
-# 🔐 JWTAuditor - Advanced JWT Security Testing Platform
+# 🔐 JWTAuditor - Advanced JWT Pentesting Platform
 
 <div align="center">
 
-![JWTAuditor Logo](https://img.shields.io/badge/JWT-Auditor-00d4aa?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![JWTAuditor Logo](https://raw.githubusercontent.com/dr34mhacks/jwtauditor/refs/heads/main/img/og-image.png)
 
 **Professional JWT security testing platform for penetration testers and cybersecurity professionals**
 
@@ -153,12 +153,6 @@ Found a bug or have a feature request? [Open an issue](https://github.com/dr34mh
 </td>
 </tr>
 </table>
-
-### 🌐 Community Links
-
-[![Website](https://img.shields.io/badge/🌐_Website-jwtauditor.com-00d4aa?style=for-the-badge)](https://jwtauditor.com)
-[![Twitter](https://img.shields.io/badge/Twitter-@infosecmania-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://x.com/infosecmania)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-infosecmania-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/infosecmania)
 
 </div>
 
