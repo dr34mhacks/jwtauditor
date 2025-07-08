@@ -900,6 +900,129 @@
     color: var(--info-color);
 }
 
+/* Constraint cards for algorithm limitations */
+.constraint-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.constraint-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease;
+}
+
+.constraint-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.constraint-card.supported {
+    border-left: 4px solid var(--success-color);
+}
+
+.constraint-card.unsupported {
+    border-left: 4px solid var(--danger-color);
+}
+
+.constraint-header {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background-color: rgba(0, 212, 170, 0.05);
+}
+
+.constraint-card.supported .constraint-header {
+    background-color: rgba(16, 185, 129, 0.08);
+}
+
+.constraint-card.unsupported .constraint-header {
+    background-color: rgba(239, 68, 68, 0.08);
+}
+
+.constraint-header i {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+}
+
+.constraint-card.supported .constraint-header i {
+    color: var(--success-color);
+}
+
+.constraint-card.unsupported .constraint-header i {
+    color: var(--danger-color);
+}
+
+.constraint-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.constraint-content {
+    padding: 1.25rem;
+}
+
+.constraint-content p {
+    margin: 0 0 1rem 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.constraint-content ul {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+}
+
+.constraint-content li {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.algorithm-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.algorithm-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background-color: rgba(0, 212, 170, 0.05);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.algorithm-name {
+    font-family: var(--font-family);
+    font-weight: 600;
+    color: var(--primary-color);
+    background-color: var(--dark-elevated);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+}
+
+.constraint-note {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: rgba(0, 212, 170, 0.05);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
 /* Next steps styling */
 .next-steps {
     margin-top: 2rem;
