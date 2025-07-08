@@ -100,21 +100,21 @@
 <!-- Reference Materials -->
 <url>
   <loc>https://jwtauditor.com/docs/reference/jwt-algorithms.html</loc>
-  <changefreq>rarely</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.6</priority>
   <lastmod>2025-01-08</lastmod>
 </url>
 
 <url>
   <loc>https://jwtauditor.com/docs/reference/jwt-claim-registry.html</loc>
-  <changefreq>rarely</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.6</priority>
   <lastmod>2025-01-08</lastmod>
 </url>
 
 <url>
   <loc>https://jwtauditor.com/docs/reference/jwt-header-parameters.html</loc>
-  <changefreq>rarely</changefreq>
+  <changefreq>yearly</changefreq>
   <priority>0.6</priority>
   <lastmod>2025-01-08</lastmod>
 </url>
