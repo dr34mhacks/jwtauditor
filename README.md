@@ -1,4 +1,4 @@
-# 🔐 JWTAuditor - Advanced JWT Security Testing Platform
+# 🔐 JWTAuditor - Advanced JWT Pentesting Platform
 
 <div align="center">
 
