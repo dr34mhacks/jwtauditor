@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure JWT Implementation Guide - JWTAuditor</title>
+    <meta name="description" content="Best practices and code examples for implementing JWT authentication securely in your applications.">
+    <meta name="keywords" content="JWT, security, implementation, best practices, authentication, authorization">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html" class="active">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>Secure JWT Implementation Guide</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-lock"></i> Security Best Practices</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 12 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        This guide provides practical advice for implementing JWT authentication securely in your applications. It covers best practices, common pitfalls, and code examples for various programming languages.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="info-content">
+                            <p>While this guide aims to be comprehensive, security is a complex and evolving field. Always stay updated with the latest security recommendations and adapt these practices to your specific security requirements and threat model.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Table of Contents</h2>
+                    <ul class="toc-list">
+                        <li><a href="#jwt-flow">JWT Authentication Flow</a></li>
+                        <li><a href="#secure-config">Secure JWT Configuration</a></li>
+                        <li><a href="#implementation">Implementation Examples</a></li>
+                        <li><a href="#token-lifecycle">Handling Token Lifecycle</a></li>
+                        <li><a href="#advanced-security">Advanced Security Measures</a></li>
+                        <li><a href="#common-mistakes">Common Implementation Mistakes</a></li>
+                        <li><a href="#microservices">JWT in Microservices Architecture</a></li>
+                    </ul>
+                </div>
+
+                <div id="jwt-flow" class="docs-section">
+                    <h2>JWT Authentication Flow</h2>
+                    
+                    <p>A typical JWT authentication flow consists of the following steps:</p>
+                    
+                    <ol>
+                        <li><strong>User Login</strong>: User provides credentials (username/password)</li>
+                        <li><strong>Token Generation</strong>: Server validates credentials and generates a JWT</li>
+                        <li><strong>Token Storage</strong>: Client stores the JWT (localStorage, cookies, etc.)</li>
+                        <li><strong>Authenticated Requests</strong>: Client includes the JWT in subsequent requests</li>
+                        <li><strong>Token Verification</strong>: Server verifies the JWT for each protected request</li>
+                        <li><strong>Response</strong>: Server processes the request if the JWT is valid</li>
+                    </ol>
+                    
+                    <h3>Recommended Flow with Refresh Tokens</h3>
+                    
+                    <p>For enhanced security, implement a refresh token system:</p>
+                    
+                    <ol>
+                        <li><strong>User Login</strong>: User provides credentials</li>
+                        <li><strong>Token Generation</strong>: Server generates both an access token (short-lived JWT) and a refresh token (longer-lived, stored securely)</li>
+                        <li><strong>Token Usage</strong>: Client uses the access token for API requests</li>
+                        <li><strong>Token Refresh</strong>: When the access token expires, client uses the refresh token to obtain a new access token without requiring re-authentication</li>
+                        <li><strong>Token Revocation</strong>: Refresh tokens can be revoked to invalidate all derived access tokens</li>
+                    </ol>
+                    
+                    <div class="code-diagram">
+                        <img src="https://mermaid.ink/img/pako:eNp1kk1PwzAMhv9KlBOgSf3YpE1w2A6bBBJiB8QOaRpcaKiTKnGHJu2_4_QDCcTwIY79-LXjHDFzCjHCvVVPTYsOVzVIXTm9QWmgkELbBhxY8FqBhKZxYMBp6UBKKKQxrQVTgYTGGFDQ1hqUqcBIKKQzjYOqBQfKgNkBGGjRQSGdVqYFZ6CQXjcGCulxZ9Ue3BbcDqzZQiGDVgZs7cB5KGRnlINCTnhnlYNCLnhnlYdCLnlnVYBCrnhnVYRCxryzKkEhV7yzKkMhE95ZNUchU95ZdY1CbnhnVYFCpryzmkG8x8hPo5TSF5KmNE3jJOGJYEnCkjhJIzZLWZRG8SxmcZQwlkQRm0VJnKSI93DgYcfDJw-PPCx5-MbDkoc9D0cefvDwzMOBhxcefvLwysMbD-88_OLhNw8nHv7w8MzDXx5OPJx5-MfDCw__efgPXUvZhQ?type=png" alt="JWT Authentication Flow with Refresh Tokens" class="flow-diagram">
+                    </div>
+                </div>
+
+                <div id="secure-config" class="docs-section">
+                    <h2>Secure JWT Configuration</h2>
+                    
+                    <h3>Token Payload</h3>
+                    <p>Include only necessary claims in your JWT payload:</p>
+                    
+                    <pre><code class="language-json">{
+  "sub": "user123",        // Subject (user identifier)
+  "iat": 1516239022,       // Issued at (timestamp)
+  "exp": 1516242622,       // Expiration time (timestamp)
+  "aud": "my-api",         // Audience (intended recipient)
+  "iss": "my-auth-server", // Issuer (who created the token)
+  "jti": "unique-id-123"   // JWT ID (unique identifier for this token)
+}</code></pre>
+                    
+                    <h3>Security Parameters</h3>
+                    
+                    <h4>Token Expiration</h4>
+                    <ul>
+                        <li>Access tokens: 15-30 minutes</li>
+                        <li>Refresh tokens: 1-7 days (stored securely)</li>
+                    </ul>
+                    
+                    <h4>Algorithm Selection</h4>
+                    <ul>
+                        <li>Prefer asymmetric algorithms (RS256, ES256) over symmetric ones (HS256)</li>
+                        <li>Avoid using "none" algorithm (disable it in your library)</li>
+                    </ul>
+                    
+                    <h4>Key Management</h4>
+                    <ul>
+                        <li>For symmetric algorithms: Use a strong, randomly generated secret (at least 256 bits)</li>
+                        <li>For asymmetric algorithms: Use proper key lengths (RSA: 2048+ bits, EC: P-256 or higher)</li>
+                        <li>Rotate keys periodically</li>
+                        <li>Use a secure key management service when possible</li>
+                    </ul>
+                    
+                    <h4>Token Storage (Client-side)</h4>
+                    <ul>
+                        <li>Prefer HttpOnly cookies with Secure and SameSite flags for web applications</li>
+                        <li>If using localStorage/sessionStorage, be aware of XSS risks</li>
+                        <li>Mobile apps: Use secure storage mechanisms provided by the platform</li>
+                    </ul>
+                </div>
+
+                <div id="implementation" class="docs-section">
+                    <h2>Implementation Examples</h2>
+                    
+                    <h3>Node.js Implementation</h3>
+                    <pre><code class="language-javascript">const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const express = require('express');
+const bcrypt = require('bcrypt');
+
+const app = express();
+app.use(express.json());
+
+// Use a strong secret or asymmetric keys
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || crypto.randomBytes(32).toString('hex');
+
+// Token blacklist (use Redis in production)
+const tokenBlacklist = new Set();
+const refreshTokens = new Map();
+
+// Generate token pair
+function generateTokens(user) {
+    const payload = {
+        sub: user.id,
+        username: user.username,
+        role: user.role,
+        permissions: user.permissions
+    };
+    
+    const accessToken = jwt.sign(payload, JWT_SECRET, {
+        expiresIn: '15m',
+        issuer: 'secure-app',
+        audience: 'secure-app-users',
+        jwtid: crypto.randomUUID()
+    });
+    
+    const refreshToken = crypto.randomBytes(32).toString('hex');
+    refreshTokens.set(refreshToken, {
+        userId: user.id,
+        expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    
+    return { accessToken, refreshToken };
+}
+
+// Middleware to validate access tokens
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ error: 'Access token required' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET, {
+            issuer: 'secure-app',
+            audience: 'secure-app-users'
+        });
+        
+        // Check if token is blacklisted
+        if (tokenBlacklist.has(decoded.jti)) {
+            return res.status(401).json({ error: 'Token has been revoked' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+}
+
+// Login endpoint
+app.post('/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+    
+    try {
+        // Validate credentials (replace with your user validation)
+        const user = await validateUser(username, password);
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        
+        const tokens = generateTokens(user);
+        
+        // Set refresh token as httpOnly cookie
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+        
+        res.json({
+            accessToken: tokens.accessToken,
+            user: {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Login failed' });
+    }
+});
+
+// Refresh token endpoint
+app.post('/auth/refresh', (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    
+    if (!refreshToken || !refreshTokens.has(refreshToken)) {
+        return res.status(401).json({ error: 'Invalid refresh token' });
+    }
+    
+    const tokenData = refreshTokens.get(refreshToken);
+    
+    if (Date.now() > tokenData.expiresAt) {
+        refreshTokens.delete(refreshToken);
+        return res.status(401).json({ error: 'Refresh token expired' });
+    }
+    
+    // Generate new tokens
+    const user = getUserById(tokenData.userId);
+    const tokens = generateTokens(user);
+    
+    // Remove old refresh token
+    refreshTokens.delete(refreshToken);
+    
+    // Set new refresh token
+    res.cookie('refreshToken', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+    
+    res.json({ accessToken: tokens.accessToken });
+});
+
+// Logout endpoint
+app.post('/auth/logout', authenticateToken, (req, res) => {
+    // Add token to blacklist
+    tokenBlacklist.add(req.user.jti);
+    
+    // Remove refresh token
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+        refreshTokens.delete(refreshToken);
+    }
+    
+    res.clearCookie('refreshToken');
+    res.json({ message: 'Logged out successfully' });
+});
+
+// Protected route example
+app.get('/protected', authenticateToken, (req, res) => {
+    res.json({
+        message: 'This is a protected route',
+        user: req.user
+    });
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});</code></pre>
+                    
+                    <h3>Python Implementation (Flask)</h3>
+                    <pre><code class="language-python">from flask import Flask, request, jsonify, make_response
+import jwt
+import bcrypt
+from datetime import datetime, timedelta
+import os
+import secrets
+import redis
+
+app = Flask(__name__)
+
+# Configuration
+JWT_SECRET = os.environ.get('JWT_SECRET', secrets.token_hex(32))
+JWT_ALGORITHM = 'HS256'
+JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
+JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)
+
+# Redis for token blacklist (use in-memory dict for demo)
+redis_client = redis.Redis(host='localhost', port=6379, db=0)
+token_blacklist = set()
+refresh_tokens = {}
+
+class TokenManager:
+    @staticmethod
+    def generate_tokens(user):
+        """Generate access and refresh tokens"""
+        payload = {
+            'sub': user['id'],
+            'username': user['username'],
+            'role': user['role'],
+            'iat': datetime.utcnow(),
+            'exp': datetime.utcnow() + JWT_ACCESS_TOKEN_EXPIRES,
+            'iss': 'secure-app',
+            'aud': 'secure-app-users',
+            'jti': secrets.token_hex(16)
+        }
+        
+        access_token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+        refresh_token = secrets.token_hex(32)
+        
+        # Store refresh token
+        refresh_tokens[refresh_token] = {
+            'user_id': user['id'],
+            'expires_at': datetime.utcnow() + JWT_REFRESH_TOKEN_EXPIRES
+        }
+        
+        return access_token, refresh_token
+    
+    @staticmethod
+    def verify_token(token):
+        """Verify and decode access token"""
+        try:
+            payload = jwt.decode(
+                token, 
+                JWT_SECRET, 
+                algorithms=[JWT_ALGORITHM],
+                issuer='secure-app',
+                audience='secure-app-users'
+            )
+            
+            # Check if token is blacklisted
+            if payload['jti'] in token_blacklist:
+                raise jwt.InvalidTokenError('Token has been revoked')
+                
+            return payload
+        except jwt.ExpiredSignatureError:
+            raise jwt.InvalidTokenError('Token has expired')
+        except jwt.InvalidTokenError:
+            raise jwt.InvalidTokenError('Invalid token')
+    
+    @staticmethod
+    def blacklist_token(jti):
+        """Add token to blacklist"""
+        token_blacklist.add(jti)
+        # In production, store in Redis with expiration
+        
+    @staticmethod
+    def verify_refresh_token(refresh_token):
+        """Verify refresh token"""
+        if refresh_token not in refresh_tokens:
+            return None
+            
+        token_data = refresh_tokens[refresh_token]
+        
+        if datetime.utcnow() > token_data['expires_at']:
+            del refresh_tokens[refresh_token]
+            return None
+            
+        return token_data
+
+def token_required(f):
+    """Decorator to require valid JWT token"""
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        
+        if not token:
+            return jsonify({'error': 'Token is missing'}), 401
+        
+        try:
+            token = token.split(' ')[1]  # Remove 'Bearer ' prefix
+            payload = TokenManager.verify_token(token)
+            request.current_user = payload
+        except jwt.InvalidTokenError as e:
+            return jsonify({'error': str(e)}), 401
+        
+        return f(*args, **kwargs)
+    
+    decorated.__name__ = f.__name__
+    return decorated
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    """User login endpoint"""
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({'error': 'Username and password required'}), 400
+    
+    # Validate user credentials (replace with your user validation)
+    user = validate_user(username, password)
+    if not user:
+        return jsonify({'error': 'Invalid credentials'}), 401
+    
+    access_token, refresh_token = TokenManager.generate_tokens(user)
+    
+    response = make_response(jsonify({
+        'access_token': access_token,
+        'user': {
+            'id': user['id'],
+            'username': user['username'],
+            'role': user['role']
+        }
+    }))
+    
+    # Set refresh token as httpOnly cookie
+    response.set_cookie(
+        'refresh_token',
+        refresh_token,
+        httponly=True,
+        secure=True,  # Use HTTPS in production
+        samesite='Strict',
+        max_age=int(JWT_REFRESH_TOKEN_EXPIRES.total_seconds())
+    )
+    
+    return response
+
+@app.route('/auth/refresh', methods=['POST'])
+def refresh():
+    """Refresh access token"""
+    refresh_token = request.cookies.get('refresh_token')
+    
+    if not refresh_token:
+        return jsonify({'error': 'Refresh token required'}), 401
+    
+    token_data = TokenManager.verify_refresh_token(refresh_token)
+    
+    if not token_data:
+        return jsonify({'error': 'Invalid or expired refresh token'}), 401
+    
+    user = get_user_by_id(token_data['user_id'])
+    access_token, new_refresh_token = TokenManager.generate_tokens(user)
+    
+    # Remove old refresh token
+    del refresh_tokens[refresh_token]
+    
+    response = make_response(jsonify({
+        'access_token': access_token
+    }))
+    
+    # Set new refresh token
+    response.set_cookie(
+        'refresh_token',
+        new_refresh_token,
+        httponly=True,
+        secure=True,
+        samesite='Strict',
+        max_age=int(JWT_REFRESH_TOKEN_EXPIRES.total_seconds())
+    )
+    
+    return response
+
+@app.route('/auth/logout', methods=['POST'])
+@token_required
+def logout():
+    """User logout endpoint"""
+    # Blacklist the access token
+    TokenManager.blacklist_token(request.current_user['jti'])
+    
+    # Remove refresh token
+    refresh_token = request.cookies.get('refresh_token')
+    if refresh_token and refresh_token in refresh_tokens:
+        del refresh_tokens[refresh_token]
+    
+    response = make_response(jsonify({'message': 'Logged out successfully'}))
+    response.set_cookie('refresh_token', '', expires=0)
+    
+    return response
+
+@app.route('/protected', methods=['GET'])
+@token_required
+def protected():
+    """Protected route example"""
+    return jsonify({
+        'message': 'This is a protected route',
+        'user': request.current_user
+    })
+
+def validate_user(username, password):
+    """Validate user credentials (replace with your implementation)"""
+    # This is a mock function - replace with your actual user validation
+    users = {
+        'admin': {'id': 1, 'username': 'admin', 'password': 'hashed_password', 'role': 'admin'},
+        'user': {'id': 2, 'username': 'user', 'password': 'hashed_password', 'role': 'user'}
+    }
+    
+    user = users.get(username)
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+        return user
+    return None
+
+def get_user_by_id(user_id):
+    """Get user by ID (replace with your implementation)"""
+    # Mock function - replace with your actual user retrieval
+    users = {
+        1: {'id': 1, 'username': 'admin', 'role': 'admin'},
+        2: {'id': 2, 'username': 'user', 'role': 'user'}
+    }
+    return users.get(user_id)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+                    
+                    <h3>Java Implementation (Spring Boot)</h3>
+                    <pre><code class="language-java">@RestController
+@RequestMapping("/auth")
+public class AuthController {
+    
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+    
+    @Autowired
+    private UserService userService;
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            User user = userService.validateUser(
+                loginRequest.getUsername(), 
+                loginRequest.getPassword()
+            );
+            
+            if (user == null) {
+                return ResponseEntity.status(401)
+                    .body(new AuthResponse("Invalid credentials"));
+            }
+            
+            String accessToken = tokenProvider.generateAccessToken(user);
+            String refreshToken = tokenProvider.generateRefreshToken(user);
+            
+            // Set refresh token as HttpOnly cookie
+            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .maxAge(Duration.ofDays(7))
+                .build();
+            
+            return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(new AuthResponse("Login successful", accessToken, user));
+                
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                .body(new AuthResponse("Login failed"));
+        }
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(HttpServletRequest request) {
+        String refreshToken = getRefreshTokenFromCookie(request);
+        
+        if (refreshToken == null || !tokenProvider.validateRefreshToken(refreshToken)) {
+            return ResponseEntity.status(401)
+                .body(new AuthResponse("Invalid refresh token"));
+        }
+        
+        User user = tokenProvider.getUserFromRefreshToken(refreshToken);
+        String newAccessToken = tokenProvider.generateAccessToken(user);
+        String newRefreshToken = tokenProvider.generateRefreshToken(user);
+        
+        // Revoke old refresh token
+        tokenProvider.revokeRefreshToken(refreshToken);
+        
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", newRefreshToken)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Strict")
+            .maxAge(Duration.ofDays(7))
+            .build();
+        
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+            .body(new AuthResponse("Token refreshed", newAccessToken));
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String accessToken = getAccessTokenFromHeader(request);
+        String refreshToken = getRefreshTokenFromCookie(request);
+        
+        if (accessToken != null) {
+            tokenProvider.revokeAccessToken(accessToken);
+        }
+        
+        if (refreshToken != null) {
+            tokenProvider.revokeRefreshToken(refreshToken);
+        }
+        
+        ResponseCookie deleteRefreshTokenCookie = ResponseCookie.from("refreshToken", "")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Strict")
+            .maxAge(0)
+            .build();
+        
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, deleteRefreshTokenCookie.toString())
+            .body(new AuthResponse("Logged out successfully"));
+    }
+}</code></pre>
+                </div>
+
+                <div id="token-lifecycle" class="docs-section">
+                    <h2>Handling Token Lifecycle</h2>
+                    
+                    <h3>Token Generation Best Practices</h3>
+                    <ul>
+                        <li>Always include an expiration time (exp claim)</li>
+                        <li>Use short expiration times for access tokens (15-30 minutes)</li>
+                        <li>Include necessary claims only (principle of least privilege)</li>
+                        <li>Use strong, unique JWT IDs (jti) for each token</li>
+                        <li>Include issuer (iss) and audience (aud) claims</li>
+                    </ul>
+                    
+                    <h3>Token Storage on Client Side</h3>
+                    
+                    <h4>Web Applications</h4>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Storage Method</th>
+                                    <th>Pros</th>
+                                    <th>Cons</th>
+                                    <th>Best For</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HttpOnly Cookies</td>
+                                    <td>XSS protection, automatic sending</td>
+                                    <td>CSRF vulnerability, size limits</td>
+                                    <td>Traditional web apps</td>
+                                </tr>
+                                <tr>
+                                    <td>localStorage</td>
+                                    <td>Large storage, explicit control</td>
+                                    <td>XSS vulnerable, persistent</td>
+                                    <td>SPAs with XSS protection</td>
+                                </tr>
+                                <tr>
+                                    <td>sessionStorage</td>
+                                    <td>Tab-scoped, automatic cleanup</td>
+                                    <td>XSS vulnerable, lost on close</td>
+                                    <td>Temporary sessions</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory only</td>
+                                    <td>Most secure, no persistence</td>
+                                    <td>Lost on refresh, complex to manage</td>
+                                    <td>High-security applications</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Mobile Applications</h4>
+                    <ul>
+                        <li><strong>iOS:</strong> Use Keychain Services for secure storage</li>
+                        <li><strong>Android:</strong> Use Android Keystore system</li>
+                        <li><strong>React Native:</strong> Use @react-native-async-storage/async-storage with encryption</li>
+                        <li><strong>Flutter:</strong> Use flutter_secure_storage package</li>
+                    </ul>
+                    
+                    <h3>Token Refresh Strategy</h3>
+                    
+                    <h4>Automatic Refresh</h4>
+                    <pre><code class="language-javascript">// Automatic token refresh implementation
+class TokenManager {
+    constructor() {
+        this.accessToken = null;
+        this.refreshToken = null;
+        this.refreshTimer = null;
+    }
+    
+    setTokens(accessToken, refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.scheduleRefresh();
+    }
+    
+    scheduleRefresh() {
+        if (this.refreshTimer) {
+            clearTimeout(this.refreshTimer);
+        }
+        
+        // Decode token to get expiration
+        const payload = JSON.parse(atob(this.accessToken.split('.')[1]));
+        const expiresAt = payload.exp * 1000; // Convert to milliseconds
+        const now = Date.now();
+        
+        // Refresh 5 minutes before expiration
+        const refreshAt = expiresAt - (5 * 60 * 1000);
+        const timeUntilRefresh = refreshAt - now;
+        
+        if (timeUntilRefresh > 0) {
+            this.refreshTimer = setTimeout(() => {
+                this.refreshTokens();
+            }, timeUntilRefresh);
+        }
+    }
+    
+    async refreshTokens() {
+        try {
+            const response = await fetch('/auth/refresh', {
+                method: 'POST',
+                credentials: 'include' // Include cookies
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                this.setTokens(data.accessToken, this.refreshToken);
+            } else {
+                // Refresh failed, redirect to login
+                this.logout();
+            }
+        } catch (error) {
+            console.error('Token refresh failed:', error);
+            this.logout();
+        }
+    }
+    
+    async makeAuthenticatedRequest(url, options = {}) {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...options.headers,
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+        
+        if (response.status === 401) {
+            // Token might be expired, try to refresh
+            await this.refreshTokens();
+            
+            // Retry the request
+            return fetch(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'Authorization': `Bearer ${this.accessToken}`
+                }
+            });
+        }
+        
+        return response;
+    }
+    
+    logout() {
+        this.accessToken = null;
+        this.refreshToken = null;
+        if (this.refreshTimer) {
+            clearTimeout(this.refreshTimer);
+        }
+        
+        // Redirect to login page
+        window.location.href = '/login';
+    }
+}</code></pre>
+                    
+                    <h3>Token Revocation</h3>
+                    
+                    <h4>Immediate Revocation</h4>
+                    <pre><code class="language-javascript">// Token blacklist implementation with Redis
+const redis = require('redis');
+const client = redis.createClient();
+
+class TokenBlacklist {
+    static async addToBlacklist(jti, exp) {
+        const ttl = exp - Math.floor(Date.now() / 1000);
+        if (ttl > 0) {
+            await client.setex(`blacklist:${jti}`, ttl, 'revoked');
+        }
+    }
+    
+    static async isBlacklisted(jti) {
+        const result = await client.get(`blacklist:${jti}`);
+        return result === 'revoked';
+    }
+    
+    static async revokeAllUserTokens(userId) {
+        // Add user to global revocation list
+        await client.set(`user_revoked:${userId}`, Date.now());
+    }
+    
+    static async isUserRevoked(userId, tokenIssuedAt) {
+        const revokedAt = await client.get(`user_revoked:${userId}`);
+        if (revokedAt) {
+            return parseInt(revokedAt) > tokenIssuedAt * 1000;
+        }
+        return false;
+    }
+}
+
+// Middleware to check token validity
+async function validateToken(req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+        
+        // Check if token is blacklisted
+        if (await TokenBlacklist.isBlacklisted(decoded.jti)) {
+            return res.status(401).json({ error: 'Token has been revoked' });
+        }
+        
+        // Check if user has been globally revoked
+        if (await TokenBlacklist.isUserRevoked(decoded.sub, decoded.iat)) {
+            return res.status(401).json({ error: 'User tokens have been revoked' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}</code></pre>
+                </div>
+
+                <div id="advanced-security" class="docs-section">
+                    <h2>Advanced Security Measures</h2>
+                    
+                    <h3>1. JSON Web Encryption (JWE)</h3>
+                    <p>For highly sensitive data, use JWE to encrypt the entire JWT payload:</p>
+                    
+                    <pre><code class="language-javascript">// JWE implementation using jose library
+const { EncryptJWT, jwtDecrypt } = require('jose');
+
+const secret = new TextEncoder().encode(process.env.JWE_SECRET);
+
+async function createEncryptedJWT(payload) {
+    const jwt = await new EncryptJWT(payload)
+        .setProtectedHeader({ alg: 'A256KW', enc: 'A256GCM' })
+        .setIssuedAt()
+        .setExpirationTime('2h')
+        .setIssuer('secure-app')
+        .setAudience('secure-app-users')
+        .encrypt(secret);
+    
+    return jwt;
+}
+
+async function decryptJWT(encryptedJWT) {
+    const { payload } = await jwtDecrypt(encryptedJWT, secret, {
+        issuer: 'secure-app',
+        audience: 'secure-app-users'
+    });
+    
+    return payload;
+}</code></pre>
+                    
+                    <h3>2. Rate Limiting</h3>
+                    <p>Implement rate limiting to prevent brute force attacks:</p>
+                    
+                    <pre><code class="language-javascript">const rateLimit = require('express-rate-limit');
+
+// Rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: 'Too many login attempts, please try again later',
+    standardHeaders: true,
+    legacyHeaders: false,
+    skipSuccessfulRequests: true
+});
+
+// Apply rate limiting to auth routes
+app.use('/auth/login', authLimiter);
+app.use('/auth/refresh', authLimiter);</code></pre>
+                    
+                    <h3>3. Device Fingerprinting</h3>
+                    <p>Bind tokens to specific devices for additional security:</p>
+                    
+                    <pre><code class="language-javascript">// Device fingerprinting
+function generateDeviceFingerprint(req) {
+    const userAgent = req.headers['user-agent'];
+    const acceptLanguage = req.headers['accept-language'];
+    const acceptEncoding = req.headers['accept-encoding'];
+    
+    const fingerprint = crypto
+        .createHash('sha256')
+        .update(`${userAgent}${acceptLanguage}${acceptEncoding}`)
+        .digest('hex');
+    
+    return fingerprint;
+}
+
+// Include device fingerprint in token
+function generateTokenWithFingerprint(user, req) {
+    const deviceFingerprint = generateDeviceFingerprint(req);
+    
+    const payload = {
+        sub: user.id,
+        username: user.username,
+        role: user.role,
+        device: deviceFingerprint
+    };
+    
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+}
+
+// Validate device fingerprint
+function validateDeviceFingerprint(req, res, next) {
+    const currentFingerprint = generateDeviceFingerprint(req);
+    const tokenFingerprint = req.user.device;
+    
+    if (currentFingerprint !== tokenFingerprint) {
+        return res.status(401).json({ error: 'Device fingerprint mismatch' });
+    }
+    
+    next();
+}</code></pre>
+                    
+                    <h3>4. IP Address Validation</h3>
+                    <p>Bind tokens to specific IP addresses:</p>
+                    
+                    <pre><code class="language-javascript">// IP address validation
+function getClientIP(req) {
+    return req.headers['x-forwarded-for'] || 
+           req.connection.remoteAddress || 
+           req.socket.remoteAddress ||
+           (req.connection.socket ? req.connection.socket.remoteAddress : null);
+}
+
+// Include IP in token
+function generateTokenWithIP(user, req) {
+    const clientIP = getClientIP(req);
+    
+    const payload = {
+        sub: user.id,
+        username: user.username,
+        role: user.role,
+        ip: clientIP
+    };
+    
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+}
+
+// Validate IP address
+function validateIPAddress(req, res, next) {
+    const currentIP = getClientIP(req);
+    const tokenIP = req.user.ip;
+    
+    if (currentIP !== tokenIP) {
+        return res.status(401).json({ error: 'IP address mismatch' });
+    }
+    
+    next();
+}</code></pre>
+                    
+                    <h3>5. Multi-Factor Authentication (MFA)</h3>
+                    <p>Implement MFA for sensitive operations:</p>
+                    
+                    <pre><code class="language-javascript">// MFA implementation
+const speakeasy = require('speakeasy');
+
+// Generate MFA token
+function generateMFAToken(user) {
+    const payload = {
+        sub: user.id,
+        username: user.username,
+        role: user.role,
+        mfa_verified: false
+    };
+    
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '5m' });
+}
+
+// Verify MFA and upgrade token
+app.post('/auth/mfa-verify', authenticateToken, (req, res) => {
+    const { mfaCode } = req.body;
+    
+    // Verify MFA code
+    const verified = speakeasy.totp.verify({
+        secret: req.user.mfa_secret,
+        encoding: 'base32',
+        token: mfaCode,
+        window: 2
+    });
+    
+    if (!verified) {
+        return res.status(401).json({ error: 'Invalid MFA code' });
+    }
+    
+    // Generate new token with MFA verified
+    const payload = {
+        ...req.user,
+        mfa_verified: true
+    };
+    
+    const newToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+    
+    res.json({ accessToken: newToken });
+});
+
+// Middleware to require MFA for sensitive operations
+function requireMFA(req, res, next) {
+    if (!req.user.mfa_verified) {
+        return res.status(403).json({ error: 'MFA verification required' });
+    }
+    next();
+}</code></pre>
+                </div>
+
+                <div id="common-mistakes" class="docs-section">
+                    <h2>Common Implementation Mistakes</h2>
+                    
+                    <h3>1. Storing Sensitive Data in JWT</h3>
+                    <div class="vulnerability">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Problem</h4>
+                        <p>Including sensitive information in JWT payloads.</p>
+                        
+                        <h4><i class="fas fa-times"></i> Bad Example</h4>
+                        <pre><code class="language-json">{
+  "sub": "user123",
+  "password": "hashedPassword",
+  "creditCard": "1234-5678-9012-3456",
+  "ssn": "123-45-6789"
+}</code></pre>
+                        
+                        <h4><i class="fas fa-check"></i> Good Example</h4>
+                        <pre><code class="language-json">{
+  "sub": "user123",
+  "role": "user",
+  "permissions": ["read", "write"]
+}</code></pre>
+                    </div>
+                    
+                    <h3>2. Using Weak Secrets</h3>
+                    <div class="vulnerability">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Problem</h4>
+                        <p>Using predictable or weak secrets for HMAC signing.</p>
+                        
+                        <h4><i class="fas fa-times"></i> Bad Example</h4>
+                        <pre><code class="language-javascript">const JWT_SECRET = 'secret';
+const JWT_SECRET = 'myapp';
+const JWT_SECRET = '123456';</code></pre>
+                        
+                        <h4><i class="fas fa-check"></i> Good Example</h4>
+                        <pre><code class="language-javascript">const JWT_SECRET = crypto.randomBytes(32).toString('hex');
+// Or use environment variables with strong secrets
+const JWT_SECRET = process.env.JWT_SECRET;</code></pre>
+                    </div>
+                    
+                    <h3>3. Not Validating Claims</h3>
+                    <div class="vulnerability">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Problem</h4>
+                        <p>Skipping validation of important claims like audience, issuer, and expiration.</p>
+                        
+                        <h4><i class="fas fa-times"></i> Bad Example</h4>
+                        <pre><code class="language-javascript">// Minimal validation
+const decoded = jwt.verify(token, secret);</code></pre>
+                        
+                        <h4><i class="fas fa-check"></i> Good Example</h4>
+                        <pre><code class="language-javascript">// Comprehensive validation
+const decoded = jwt.verify(token, secret, {
+    algorithms: ['HS256'],
+    issuer: 'my-app',
+    audience: 'my-api',
+    maxAge: '15m'
+});</code></pre>
+                    </div>
+                    
+                    <h3>4. Long Token Expiration</h3>
+                    <div class="vulnerability">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Problem</h4>
+                        <p>Setting very long expiration times for access tokens.</p>
+                        
+                        <h4><i class="fas fa-times"></i> Bad Example</h4>
+                        <pre><code class="language-javascript">// Token valid for 30 days
+const token = jwt.sign(payload, secret, { expiresIn: '30d' });</code></pre>
+                        
+                        <h4><i class="fas fa-check"></i> Good Example</h4>
+                        <pre><code class="language-javascript">// Short-lived access token with refresh mechanism
+const accessToken = jwt.sign(payload, secret, { expiresIn: '15m' });
+const refreshToken = crypto.randomBytes(32).toString('hex');</code></pre>
+                    </div>
+                    
+                    <h3>5. Ignoring Algorithm Validation</h3>
+                    <div class="vulnerability">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Problem</h4>
+                        <p>Not specifying allowed algorithms, leaving room for algorithm confusion attacks.</p>
+                        
+                        <h4><i class="fas fa-times"></i> Bad Example</h4>
+                        <pre><code class="language-javascript">// Accepts any algorithm
+const decoded = jwt.verify(token, secret);</code></pre>
+                        
+                        <h4><i class="fas fa-check"></i> Good Example</h4>
+                        <pre><code class="language-javascript">// Explicitly specify allowed algorithms
+const decoded = jwt.verify(token, secret, { 
+    algorithms: ['HS256'] 
+});</code></pre>
+                    </div>
+                </div>
+
+                <div id="microservices" class="docs-section">
+                    <h2>JWT in Microservices Architecture</h2>
+                    
+                    <h3>Challenges in Microservices</h3>
+                    <ul>
+                        <li>Token validation across multiple services</li>
+                        <li>Service-to-service authentication</li>
+                        <li>Token propagation and context sharing</li>
+                        <li>Consistent security policies</li>
+                    </ul>
+                    
+                    <h3>Architecture Patterns</h3>
+                    
+                    <h4>1. Centralized Authentication Service</h4>
+                    <pre><code class="language-javascript">// API Gateway with JWT validation
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const httpProxy = require('http-proxy-middleware');
+
+const app = express();
+
+// JWT validation middleware
+function validateJWT(req, res, next) {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        
+        // Add user context to forwarded request
+        req.headers['x-user-id'] = decoded.sub;
+        req.headers['x-user-role'] = decoded.role;
+        
+        next();
+    } catch (err) {
+        return res.status(401).json({ error: 'Invalid token' });
+    }
+}
+
+// Proxy configuration
+const services = {
+    '/user': 'http://user-service:3001',
+    '/product': 'http://product-service:3002',
+    '/order': 'http://order-service:3003'
+};
+
+// Apply JWT validation to all routes
+app.use(validateJWT);
+
+// Proxy requests to microservices
+Object.keys(services).forEach(path => {
+    app.use(path, httpProxy({
+        target: services[path],
+        changeOrigin: true,
+        pathRewrite: { [`^${path}`]: '' }
+    }));
+});
+
+app.listen(3000, () => {
+    console.log('API Gateway running on port 3000');
+});</code></pre>
+                    
+                    <h4>2. Service-to-Service Authentication</h4>
+                    <pre><code class="language-javascript">// Service-to-service JWT
+class ServiceAuthenticator {
+    constructor(serviceName, serviceSecret) {
+        this.serviceName = serviceName;
+        this.serviceSecret = serviceSecret;
+    }
+    
+    generateServiceToken(targetService, scopes = []) {
+        const payload = {
+            sub: this.serviceName,
+            aud: targetService,
+            iss: 'service-mesh',
+            scope: scopes,
+            type: 'service'
+        };
+        
+        return jwt.sign(payload, this.serviceSecret, { expiresIn: '5m' });
+    }
+    
+    validateServiceToken(token, expectedAudience) {
+        try {
+            const decoded = jwt.verify(token, this.serviceSecret, {
+                audience: expectedAudience,
+                issuer: 'service-mesh'
+            });
+            
+            if (decoded.type !== 'service') {
+                throw new Error('Invalid token type');
+            }
+            
+            return decoded;
+        } catch (err) {
+            throw new Error('Invalid service token');
+        }
+    }
+}
+
+// Usage in microservice
+const serviceAuth = new ServiceAuthenticator('user-service', process.env.SERVICE_SECRET);
+
+// Making authenticated request to another service
+async function callOrderService(userId) {
+    const token = serviceAuth.generateServiceToken('order-service', ['read:orders']);
+    
+    const response = await fetch('http://order-service/orders', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'X-User-ID': userId
+        }
+    });
+    
+    return response.json();
+}</code></pre>
+                    
+                    <h3>Best Practices for Microservices</h3>
+                    
+                    <h4>1. Token Propagation</h4>
+                    <pre><code class="language-javascript">// Middleware to propagate user context
+function propagateUserContext(req, res, next) {
+    if (req.user) {
+        // Add user information to request headers
+        req.headers['x-user-id'] = req.user.sub;
+        req.headers['x-user-role'] = req.user.role;
+        req.headers['x-user-permissions'] = JSON.stringify(req.user.permissions);
+    }
+    next();
+}
+
+// Service client with context propagation
+class ServiceClient {
+    constructor(baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+    
+    async request(path, options = {}, userContext = null) {
+        const headers = {
+            'Content-Type': 'application/json',
+            ...options.headers
+        };
+        
+        // Propagate user context if available
+        if (userContext) {
+            headers['x-user-id'] = userContext.sub;
+            headers['x-user-role'] = userContext.role;
+            headers['x-user-permissions'] = JSON.stringify(userContext.permissions);
+        }
+        
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            ...options,
+            headers
+        });
+        
+        return response.json();
+    }
+}</code></pre>
+                    
+                    <h4>2. Distributed Token Validation</h4>
+                    <pre><code class="language-javascript">// Shared JWT validation service
+class DistributedJWTValidator {
+    constructor(publicKey, redisClient) {
+        this.publicKey = publicKey;
+        this.redis = redisClient;
+    }
+    
+    async validateToken(token) {
+        try {
+            // First check cache
+            const cacheKey = `jwt:${token}`;
+            const cachedResult = await this.redis.get(cacheKey);
+            
+            if (cachedResult) {
+                return JSON.parse(cachedResult);
+            }
+            
+            // Validate token
+            const decoded = jwt.verify(token, this.publicKey, {
+                algorithms: ['RS256'],
+                issuer: 'auth-service'
+            });
+            
+            // Check if token is blacklisted
+            const isBlacklisted = await this.redis.sismember('blacklist', decoded.jti);
+            if (isBlacklisted) {
+                throw new Error('Token revoked');
+            }
+            
+            // Cache the result
+            const ttl = decoded.exp - Math.floor(Date.now() / 1000);
+            await this.redis.setex(cacheKey, ttl, JSON.stringify(decoded));
+            
+            return decoded;
+        } catch (err) {
+            throw new Error('Token validation failed');
+        }
+    }
+}
+
+// Usage in multiple services
+const validator = new DistributedJWTValidator(publicKey, redisClient);
+
+// Shared middleware
+async function validateJWTMiddleware(req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = await validator.validateToken(token);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Additional Resources</h2>
+                    
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-jwt-bcp-02" target="_blank" class="resource-link">
+                                <i class="fas fa-file-alt"></i>
+                                <div>
+                                    <h4>JWT Best Practices (IETF)</h4>
+                                    <p>Official best practices for JWT implementation</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://auth0.com/resources/ebooks/jwt-handbook" target="_blank" class="resource-link">
+                                <i class="fas fa-book"></i>
+                                <div>
+                                    <h4>Auth0: JWT Handbook</h4>
+                                    <p>Comprehensive guide to JWT implementation</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" target="_blank" class="resource-link">
+                                <i class="fas fa-list-alt"></i>
+                                <div>
+                                    <h4>OWASP JWT Cheat Sheet</h4>
+                                    <p>Security best practices from the Open Web Application Security Project</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <div class="next-links">
+                            <a href="jwt-vulnerabilities-guide.html" class="next-link">
+                                <i class="fas fa-user-secret"></i>
+                                <span>Explore JWT Vulnerabilities</span>
+                            </a>
+                            <a href="tool-guides/jwt-editor.html" class="next-link">
+                                <i class="fas fa-edit"></i>
+                                <span>Try JWT Editor Tool</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <button class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize syntax highlighting
+            hljs.highlightAll();
+            
+            // Mobile sidebar toggle
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.docs-sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
+            
+            // Scroll to top functionality
+            const scrollToTopBtn = document.querySelector('.scroll-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

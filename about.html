@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - JWTAuditor</title>
+    <meta name="description" content="Learn about JWTAuditor - Built by security professionals to tackle JWT pentesting challenges">
+    <meta name="keywords" content="JWT, pentest, security, about, team, cybersecurity">
+    <meta name="author" content="Sid and Sandeep">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>" type="image/svg+xml">
+    <style>
+        .about-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .about-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .about-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .about-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+        
+        .about-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .about-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .about-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-card {
+            background: var(--dark-elevated);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .team-card .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark-bg);
+        }
+        
+        .team-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-card .role {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            background: var(--dark-elevated);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .feature-item i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-item h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .mission-statement {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(116, 185, 255, 0.05));
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .mission-statement h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .mission-statement p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--dark-elevated);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .stat-item .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .back-link:hover {
+            color: var(--primary-light);
+            transform: translateX(-5px);
+        }
+        
+        .back-link i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to JWTAuditor
+        </a>
+        
+        <div class="about-header">
+            <h1>About JWTAuditor</h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">Built by security professionals, for security professionals</p>
+        </div>
+        
+        <div class="mission-statement">
+            <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
+            <p>To simplify JWT security testing and make advanced JWT analysis accessible to every security professional, eliminating the day-to-day hassles we face during penetration testing.</p>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-lightbulb"></i> The Story Behind JWTAuditor</h2>
+            <p>JWTAuditor was born out of frustration and necessity. As penetration testers, we constantly encountered JWT tokens during our assessments, but the available tools were either too complex, required server-side processing, or lacked the comprehensive analysis capabilities we needed.</p>
+            
+            <p>We found ourselves spending countless hours manually decoding tokens, writing custom scripts for different attack vectors, and struggling with inconsistent tooling across different client environments. The breaking point came during a particularly challenging engagement where we had to analyze hundreds of JWT tokens with varying structures and security implementations.</p>
+            
+            <p>That's when we decided to build JWTAuditor - a tool that would address all the pain points we encountered:</p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>100% Client-Side</h4>
+                    <p>Your sensitive data never leaves your browser - perfect for confidential pentests</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-search"></i>
+                    <h4>Comprehensive Analysis</h4>
+                    <p>Automated vulnerability detection and security recommendations</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Fast & Efficient</h4>
+                    <p>Optimized JavaScript performance for complex cryptographic operations</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>Works Everywhere</h4>
+                    <p>No installation required - runs in any modern browser</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-brain"></i>
+                    <h4>Intelligent Bruteforcing</h4>
+                    <p>Smart secret detection using curated wordlists and known weak patterns</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-edit"></i>
+                    <h4>Token Manipulation</h4>
+                    <p>Advanced JWT editing and generation for comprehensive security testing</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-users"></i> Meet the Team</h2>
+            <p>JWTAuditor is developed by a team of passionate security professionals who understand the real-world challenges of JWT testing (Probably).</p>
+            
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3>Sid Joshi</h3>
+                    <div class="role">Lord of the Leaky Claims
+                    </div>
+<p>Chief overthinker and part-time keyboard philosopher behind this project. Fueled by coffee, curiosity, and an unreasonable number of browser tabs. Known for turning late-night ideas into questionable prototypes and then pretending it was all part of the plan.</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+                        <a href="https://github.com/dr34mhacks" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><i class="fab fa-github" style="font-size: 1.2rem;"></i> GitHub</a>
+                        <a href="https://www.linkedin.com/in/sid-j0shi/" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><i class="fab fa-linkedin" style="font-size: 1.2rem;"></i> LinkedIn</a>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Sandeep Wawdane</h3>
+                    <div class="role">Chief Token Tamperer
+                    </div>
+<p>The other half of this operation. Known for suggesting features nobody asked for and then building them anyway. Fueled by late-night inspiration and questionable amounts of caffeine.</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+                        <a href="https://github.com/thecybersandeep" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><i class="fab fa-github" style="font-size: 1.2rem;"></i> GitHub</a>
+                        <a href="https://www.linkedin.com/in/sandeepwawdane/" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><i class="fab fa-linkedin" style="font-size: 1.2rem;"></i> LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-target"></i> What Makes JWTAuditor Different</h2>
+            
+            <h3>🔒 Privacy First</h3>
+            <p>Unlike other online JWT tools, JWTAuditor processes everything locally in your browser. No tokens, secrets, or sensitive data are ever transmitted to our servers or any third-party services.</p>
+            
+            <h3>🧠 Security-Focused</h3>
+            <p>Built by pentesters who understand real-world attack vectors. Our vulnerability detection is based on actual security flaws we've encountered in the field, not just theoretical weaknesses.</p>
+            
+            <h3>⚡ Performance Optimized</h3>
+            <p>We use optimized JavaScript algorithms and Web Workers for intensive tasks, ensuring that even complex brute-force operations don't freeze your browser.</p>
+            
+            <h3>📚 Educational Value</h3>
+            <p>Each vulnerability detection comes with detailed explanations, attack scenarios, and remediation guidance - helping you understand not just what's wrong, but why it's wrong and how to fix it.</p>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-chart-line"></i> Project Impact</h2>
+            <p>Since its inception, JWTAuditor has helped security professionals worldwide identify and remediate JWT-related vulnerabilities more efficiently.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="number">500+</span>
+                    <div class="label">Vulnerabilities Identified</div>
+                </div>
+                <div class="stat-item">
+                    <span class="number">100+</span>
+                    <div class="label">Security Professionals Using</div>
+                </div>
+                <div class="stat-item">
+                    <span class="number">24/7</span>
+                    <div class="label">Available Offline</div>
+                </div>
+                <div class="stat-item">
+                    <span class="number">0</span>
+                    <div class="label">Data Transmitted</div>
+                </div>
+                <div class="stat-item">
+                    <span class="number">10k+</span>
+                    <div class="label">Secrets Tested</div>
+                </div>
+                <div class="stat-item">
+                    <span class="number">100%</span>
+                    <div class="label">Open Source</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-handshake"></i> Backed by Infosecmania.com</h2>
+            <p>JWTAuditor is proudly backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>, a leading cybersecurity community and resource hub. This partnership ensures that JWTAuditor remains free, open, and continuously updated with the latest security research and vulnerability detection techniques.</p>
+            
+            <p>Infosecmania.com's support allows us to focus on development and research while maintaining the tool's commitment to privacy and security. Together, we're building tools that make the cybersecurity community stronger and more effective.</p>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-info-circle"></i> Data Privacy & Acknowledgments</h2>
+            
+            <h3>🔒 Your Data Remains Yours</h3>
+            <p>JWTAuditor operates entirely within your browser using optimized client-side JavaScript. This means:</p>
+            <ul style="color: var(--text-secondary); margin-left: 2rem; margin-bottom: 1.5rem;">
+                <li>No JWT tokens, secrets, or sensitive data are ever transmitted to our servers</li>
+                <li>Everything happens locally on your machine - you can even use JWTAuditor offline</li>
+                <li>Your security assessments remain completely private and confidential</li>
+                <li>We don't track, store, or have access to any of your testing data</li>
+            </ul>
+            
+            <h3>🙏 Community Resources & Acknowledgments</h3>
+            <p>JWTAuditor's secret bruteforcing capabilities are enhanced by utilizing publicly available JWT secret wordlists. We want to acknowledge and thank the security community for sharing these valuable resources:</p>
+            <ul style="color: var(--text-secondary); margin-left: 2rem; margin-bottom: 1.5rem;">
+                <li><strong>Wallarm JWT Secrets List:</strong> We utilize the comprehensive JWT secrets list from <a href="https://github.com/wallarm/jwt-secrets/blob/master/jwt.secrets.list" target="_blank" style="color: var(--primary-color);">github.com/wallarm/jwt-secrets</a>, which contains commonly used weak secrets found in real-world applications</li>
+                <li><strong>Security Research Community:</strong> Our vulnerability detection patterns are based on public security research and CVE disclosures shared by the global cybersecurity community</li>
+                <li><strong>Open Source Contributors:</strong> Various cryptographic libraries and security tools that make JWTAuditor possible</li>
+            </ul>
+            <p>By leveraging these community-driven resources, JWTAuditor can more effectively identify weak JWT implementations and help improve overall security posture. We encourage users to contribute back to these projects and share their own security research with the community.</p>
+        </div>
+        
+        <div class="about-section">
+            <h2><i class="fas fa-rocket"></i> Future Plans</h2>
+            <p>We're constantly working to improve JWTAuditor based on community feedback and emerging JWT attack techniques. Our roadmap includes:</p>
+            
+            <ul style="color: var(--text-secondary); margin-left: 2rem;">
+                <li>Advanced algorithm confusion attack detection</li>
+                <li>Integration with popular penetration testing frameworks</li>
+                <li>Support for JWT encryption (JWE) analysis</li>
+                <li>Custom wordlist management for brute-force attacks</li>
+                <li>Automated reporting and vulnerability documentation</li>
+                <li>Browser extension for seamless testing workflow</li>
+            </ul>
+        </div>
+        
+        <div class="mission-statement">
+            <h2><i class="fas fa-heart"></i> Our Commitment</h2>
+            <p>JWTAuditor will always remain free, open-source, and 100% client-side. We believe that security tools should be accessible to everyone, and your sensitive data should always remain under your complete control. No servers, no data collection, no compromises - just powerful JWT security testing tools that respect your privacy.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="docs/jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="docs/jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="docs/secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+
+            <p>&copy; 2025 A Project by 
+                <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+                <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+                Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+    <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+    <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+</div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

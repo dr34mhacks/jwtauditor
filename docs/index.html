@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWTAuditor Documentation - Learn About JWT Security</title>
+    <meta name="description" content="Comprehensive documentation for JWTAuditor, covering JWT fundamentals, security vulnerabilities, and best practices for implementation.">
+    <meta name="keywords" content="JWT, JSON Web Token, security, documentation, vulnerabilities, best practices">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html" class="active">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWTAuditor Documentation</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-book"></i> Comprehensive Guide</span>
+                        <span><i class="fas fa-clock"></i> Updated: May 2024</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        Welcome to the comprehensive documentation for JWTAuditor, the advanced client-side JWT analysis and security tool. This documentation will help you understand JSON Web Tokens (JWTs), their security implications, and how to use JWTAuditor effectively.
+                    </p>
+                    
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fas fa-book"></i></div>
+                            <h3>Learn JWT Fundamentals</h3>
+                            <p>Understand the structure, claims, and use cases for JSON Web Tokens</p>
+                            <a href="jwt-fundamentals.html" class="card-link">Get Started <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fas fa-user-secret"></i></div>
+                            <h3>Security Vulnerabilities</h3>
+                            <p>Explore common JWT security issues and how to identify them</p>
+                            <a href="jwt-vulnerabilities-guide.html" class="card-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fas fa-code"></i></div>
+                            <h3>Implementation Guide</h3>
+                            <p>Best practices for securely implementing JWT authentication</p>
+                            <a href="secure-jwt-implementation.html" class="card-link">View Guide <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Getting Started with JWTAuditor</h2>
+                    <p>
+                        JWTAuditor provides a suite of tools for working with JSON Web Tokens. Whether you're a security professional, developer, or just learning about JWTs, our tool can help you understand and test JWT implementations.
+                    </p>
+                    
+                    <div class="tool-overview">
+                        <div class="tool-card">
+                            <h3><i class="fas fa-search"></i> Decoder & Analyzer</h3>
+                            <p>Decode JWT tokens and analyze them for security vulnerabilities</p>
+                            <a href="tool-guides/decoder-analyzer.html" class="tool-link">Learn how to use <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <h3><i class="fas fa-key"></i> Secret Bruteforcer</h3>
+                            <p>Test JWT tokens against common secrets and custom wordlists</p>
+                            <a href="tool-guides/secret-bruteforcer.html" class="tool-link">Learn how to use <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <h3><i class="fas fa-edit"></i> JWT Editor</h3>
+                            <p>Modify JWT headers and payloads, then re-sign with various algorithms</p>
+                            <a href="tool-guides/jwt-editor.html" class="tool-link">Learn how to use <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <h3><i class="fas fa-plus-circle"></i> JWT Generator</h3>
+                            <p>Create new JWTs from scratch with custom claims and signatures</p>
+                            <a href="tool-guides/jwt-generator.html" class="tool-link">Learn how to use <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Additional Resources</h2>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://tools.ietf.org/html/rfc7519" target="_blank" class="resource-link">
+                                <i class="fas fa-file-alt"></i>
+                                <div>
+                                    <h4>IETF RFC 7519 - JWT Standard</h4>
+                                    <p>The official specification for JSON Web Tokens</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" target="_blank" class="resource-link">
+                                <i class="fas fa-list-alt"></i>
+                                <div>
+                                    <h4>OWASP JWT Cheat Sheet</h4>
+                                    <p>Security best practices from the Open Web Application Security Project</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://portswigger.net/web-security/jwt" target="_blank" class="resource-link">
+                                <i class="fas fa-bug"></i>
+                                <div>
+                                    <h4>PortSwigger Web Security Academy: JWT Attacks</h4>
+                                    <p>Practical examples of JWT vulnerabilities and exploits</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://auth0.com/resources/ebooks/jwt-handbook" target="_blank" class="resource-link">
+                                <i class="fas fa-book"></i>
+                                <div>
+                                    <h4>Auth0 JWT Handbook</h4>
+                                    <p>Comprehensive guide to understanding and implementing JWTs</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="js/docs.js"></script>
+</body>
+</html>
