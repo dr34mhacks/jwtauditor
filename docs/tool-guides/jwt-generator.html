@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Generator Guide - JWTAuditor Documentation</title>
+    <meta name="description" content="Learn how to use JWTAuditor's JWT Generator tool to create new JWT tokens from scratch with custom claims and signatures.">
+    <meta name="keywords" content="JWT, generator, create, custom claims, signature, token generation">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="jwt-generator.html" class="active">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="../reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="../reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="../reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Generator Guide</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-plus-circle"></i> Creation Tool</span>
+                        <span><i class="fas fa-clock"></i> Updated: May 2024</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        The JWT Generator allows you to create new JWT tokens from scratch with custom headers, payloads, and signatures. This tool is essential for testing applications, creating proof-of-concept tokens, and understanding JWT construction.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>What is JWT Generation?</h2>
+                    <p>
+                        JWT generation is the process of creating a new JSON Web Token by:
+                    </p>
+                    <ul>
+                        <li><strong>Defining the header:</strong> Specifying algorithm, type, and other metadata</li>
+                        <li><strong>Creating the payload:</strong> Adding claims that represent the token's information</li>
+                        <li><strong>Generating the signature:</strong> Cryptographically signing the token</li>
+                        <li><strong>Assembling the token:</strong> Combining all parts into a complete JWT</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <div class="info-content">
+                            <strong>Use Cases:</strong> Testing authentication flows, creating demo tokens, prototyping applications, and security research.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>How to Use the JWT Generator</h2>
+                    
+                    <h3>Step 1: Navigate to the Tool</h3>
+                    <p>Click on the "🔧 JWT Generator" tab in the main JWTAuditor interface.</p>
+
+                    <h3>Step 2: Configure the Header</h3>
+                    <p>The header editor comes pre-populated with a default header. You can modify it as needed:</p>
+                    
+                    <div class="code-example">
+                        <h4>Default Header</h4>
+                        <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+                    </div>
+
+                    <p>Common header modifications:</p>
+                    <ul>
+                        <li><strong>Algorithm:</strong> Change between HS256, HS384, HS512, RS256, RS384, RS512, or none</li>
+                        <li><strong>Key ID:</strong> Add a "kid" parameter for key identification</li>
+                        <li><strong>Content Type:</strong> Add "cty" for nested JWTs</li>
+                        <li><strong>Custom parameters:</strong> Add application-specific header claims</li>
+                    </ul>
+
+                    <h3>Step 3: Build the Payload</h3>
+                    <p>The payload editor includes a default payload with common claims. You can:</p>
+                    
+                    <div class="code-example">
+                        <h4>Default Payload</h4>
+                        <pre><code class="language-json">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <h4>Adding Standard Claims</h4>
+                    <p>Use the claim buttons to quickly add standard JWT claims:</p>
+                    
+                    <div class="claim-buttons-demo">
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">sub</button>
+                            <span>Subject - The user identifier</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">iss</button>
+                            <span>Issuer - Who issued the token</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">aud</button>
+                            <span>Audience - Who the token is for</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">exp</button>
+                            <span>Expiration - When the token expires</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">nbf</button>
+                            <span>Not Before - When the token becomes valid</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">iat</button>
+                            <span>Issued At - When the token was issued</span>
+                        </div>
+                        <div class="claim-button-group">
+                            <button class="claim-btn-demo">jti</button>
+                            <span>JWT ID - Unique identifier for the token</span>
+                        </div>
+                    </div>
+
+                    <h3>Step 4: Configure Signature Options</h3>
+                    <p>Choose the signing algorithm and provide the necessary credentials:</p>
+                    
+                    <div class="signature-options">
+                        <div class="option-card">
+                            <h4>none Algorithm</h4>
+                            <p>Creates an unsigned token. Useful for testing if applications accept unsigned tokens.</p>
+                            <p><strong>Security Risk:</strong> No cryptographic protection</p>
+                        </div>
+                        
+                        <div class="option-card">
+                            <h4>HMAC Algorithms (HS256, HS384, HS512)</h4>
+                            <p>Uses a shared secret key for signing. Enter your secret key in the "Secret Key" field.</p>
+                            <p><strong>Example:</strong> <code>your-256-bit-secret</code></p>
+                        </div>
+                        
+                        <div class="option-card">
+                            <h4>RSA Algorithms (RS256, RS384, RS512)</h4>
+                            <p>Uses RSA private key for signing. You can:</p>
+                            <ul>
+                                <li>Paste an existing private key</li>
+                                <li>Generate a new key pair using the "Generate RSA Key Pair" button</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Step 5: Generate RSA Keys (Optional)</h3>
+                    <p>For RSA algorithms, you can generate a new key pair:</p>
+                    <ol>
+                        <li>Select an RSA algorithm (RS256, RS384, or RS512)</li>
+                        <li>Click "Generate RSA Key Pair"</li>
+                        <li>The tool will generate a 2048-bit RSA key pair</li>
+                        <li>The private key will be used for signing</li>
+                        <li>The public key will be displayed for verification purposes</li>
+                    </ol>
+
+                    <h3>Step 6: Generate the JWT</h3>
+                    <p>Click "Generate JWT" to create your token. The tool will:</p>
+                    <ul>
+                        <li>Validate the JSON syntax</li>
+                        <li>Update timestamp claims (iat, exp, nbf) if present</li>
+                        <li>Generate the appropriate signature</li>
+                        <li>Display the complete JWT token</li>
+                    </ul>
+
+                    <h3>Step 7: Copy and Use</h3>
+                    <p>Use the "Copy to Clipboard" button to copy the generated token for use in your applications or testing.</p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Common Use Cases</h2>
+                    
+                    <h3>1. Testing Authentication Flow</h3>
+                    <p>Create tokens with different user roles to test application access control:</p>
+                    
+                    <div class="code-example">
+                        <h4>Admin User Token</h4>
+                        <pre><code class="language-json">{
+  "sub": "admin",
+  "name": "Administrator",
+  "role": "admin",
+  "permissions": ["read", "write", "delete", "admin"],
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <div class="code-example">
+                        <h4>Regular User Token</h4>
+                        <pre><code class="language-json">{
+  "sub": "user123",
+  "name": "John Doe",
+  "role": "user",
+  "permissions": ["read"],
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <h3>2. API Testing</h3>
+                    <p>Create tokens for testing API endpoints with different scopes:</p>
+                    
+                    <div class="code-example">
+                        <h4>API Access Token</h4>
+                        <pre><code class="language-json">{
+  "sub": "api-client",
+  "aud": "https://api.example.com",
+  "scope": "read:users write:users",
+  "client_id": "abc123",
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <h3>3. Microservices Communication</h3>
+                    <p>Generate tokens for service-to-service communication:</p>
+                    
+                    <div class="code-example">
+                        <h4>Service Token</h4>
+                        <pre><code class="language-json">{
+  "sub": "user-service",
+  "aud": "order-service",
+  "iss": "auth-service",
+  "scope": "service:user:read service:order:write",
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <h3>4. Security Testing</h3>
+                    <p>Create tokens for security testing scenarios:</p>
+                    
+                    <div class="code-example">
+                        <h4>Privilege Escalation Test</h4>
+                        <pre><code class="language-json">{
+  "sub": "user123",
+  "name": "John Doe",
+  "role": "admin",  // Elevated privilege
+  "original_role": "user",
+  "privilege_escalation_test": true,
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Advanced Features</h2>
+                    
+                    <h3>Automatic Timestamp Updates</h3>
+                    <p>The generator automatically updates timestamp claims when generating tokens:</p>
+                    <ul>
+                        <li><strong>iat (Issued At):</strong> Set to current timestamp</li>
+                        <li><strong>exp (Expiration):</strong> Updated relative to current time</li>
+                        <li><strong>nbf (Not Before):</strong> Set to current timestamp</li>
+                    </ul>
+
+                    <h3>Custom Claims</h3>
+                    <p>Add any custom claims to the payload by editing the JSON directly:</p>
+                    
+                    <div class="code-example">
+                        <h4>Custom Claims Example</h4>
+                        <pre><code class="language-json">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "custom_claim": "custom_value",
+  "organization": "Acme Corp",
+  "department": "Engineering",
+  "security_level": "high",
+  "features": ["feature1", "feature2"],
+  "metadata": {
+    "ip": "192.168.1.1",
+    "user_agent": "Mozilla/5.0...",
+    "session_id": "abc123"
+  }
+}</code></pre>
+                    </div>
+
+                    <h3>Nested JWTs</h3>
+                    <p>Create nested JWTs by setting the content type in the header:</p>
+                    
+                    <div class="code-example">
+                        <h4>Nested JWT Header</h4>
+                        <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "cty": "JWT"
+}</code></pre>
+                    </div>
+
+                    <h3>Key ID (kid) Parameter</h3>
+                    <p>Add key identifiers for key management:</p>
+                    
+                    <div class="code-example">
+                        <h4>Header with Key ID</h4>
+                        <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "key-2024-01"
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Best Practices</h2>
+                    
+                    <h3>Security Best Practices</h3>
+                    <ul>
+                        <li><strong>Use strong secrets:</strong> For HMAC algorithms, use cryptographically secure random secrets</li>
+                        <li><strong>Set appropriate expiration:</strong> Don't create tokens that live too long</li>
+                        <li><strong>Include necessary claims:</strong> Add issuer, audience, and other validation claims</li>
+                        <li><strong>Use appropriate algorithms:</strong> Consider RS256 for production systems</li>
+                        <li><strong>Validate inputs:</strong> Ensure all claims are properly validated</li>
+                    </ul>
+
+                    <h3>Testing Best Practices</h3>
+                    <ul>
+                        <li><strong>Test different scenarios:</strong> Create tokens for various user types and permissions</li>
+                        <li><strong>Test edge cases:</strong> Create tokens with missing claims, invalid timestamps, etc.</li>
+                        <li><strong>Document test cases:</strong> Keep track of different token configurations</li>
+                        <li><strong>Validate behavior:</strong> Ensure your application handles tokens correctly</li>
+                    </ul>
+
+                    <h3>Development Best Practices</h3>
+                    <ul>
+                        <li><strong>Use consistent claim names:</strong> Standardize claim names across your application</li>
+                        <li><strong>Include version information:</strong> Add version claims for token format changes</li>
+                        <li><strong>Add debugging information:</strong> Include claims that help with debugging</li>
+                        <li><strong>Consider token size:</strong> Keep tokens reasonably small for performance</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Working with RSA Keys</h2>
+                    
+                    <h3>Key Generation</h3>
+                    <p>The built-in RSA key generator creates 2048-bit keys suitable for testing:</p>
+                    <ul>
+                        <li><strong>Private key:</strong> Used for signing tokens</li>
+                        <li><strong>Public key:</strong> Used for verification (displayed for reference)</li>
+                        <li><strong>Format:</strong> PEM format compatible with most systems</li>
+                    </ul>
+
+                    <h3>External Key Management</h3>
+                    <p>You can also use externally generated keys:</p>
+                    
+                    <div class="code-example">
+                        <h4>Generate keys with OpenSSL</h4>
+                        <pre><code class="language-bash"># Generate private key
+openssl genrsa -out private.pem 2048
+
+# Extract public key
+openssl rsa -in private.pem -pubout -out public.pem
+
+# View key details
+openssl rsa -in private.pem -text -noout</code></pre>
+                    </div>
+
+                    <h3>Key Security</h3>
+                    <ul>
+                        <li><strong>Private key protection:</strong> Never share or commit private keys</li>
+                        <li><strong>Key rotation:</strong> Regularly rotate keys in production</li>
+                        <li><strong>Key storage:</strong> Use secure key management systems</li>
+                        <li><strong>Testing keys:</strong> Use separate keys for testing and production</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Troubleshooting</h2>
+                    
+                    <div class="faq-item">
+                        <h4>Q: I get "Invalid JSON" when generating tokens</h4>
+                        <p>A: Check that your header and payload JSON is properly formatted. Use proper quotes around strings and ensure commas are correctly placed.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: The generated token doesn't work in my application</h4>
+                        <p>A: Verify that you're using the correct algorithm and secret key. Also check that your application expects the claims you've included.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: RSA key generation fails</h4>
+                        <p>A: Ensure your browser supports the Web Crypto API. Try refreshing the page or using a different browser.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: How do I know if my token is valid?</h4>
+                        <p>A: Use the Decoder & Analyzer tool to decode and validate your generated token. It will show any issues with the token structure.</p>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Security Considerations</h2>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-shield-alt info-icon"></i>
+                        <div class="info-content">
+                            <strong>Privacy:</strong> All token generation is performed locally in your browser. No tokens, keys, or secrets are transmitted to external servers.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <div class="warning-content">
+                            <strong>Important:</strong> Generated RSA keys are for testing purposes only. For production use, generate keys using secure, offline methods.
+                        </div>
+                    </div>
+
+                    <p>Additional security considerations:</p>
+                    <ul>
+                        <li>Don't use generated tokens in production without proper validation</li>
+                        <li>Be careful when sharing tokens - they may contain sensitive information</li>
+                        <li>Use appropriate key sizes for your security requirements</li>
+                        <li>Consider the implications of token expiration and rotation</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Integration Examples</h2>
+                    
+                    <h3>Node.js Verification</h3>
+                    <div class="code-example">
+                        <pre><code class="language-javascript">const jwt = require('jsonwebtoken');
+
+// For HMAC tokens
+const secret = 'your-secret-key';
+const token = 'your-generated-token';
+
+try {
+    const decoded = jwt.verify(token, secret);
+    console.log('Token is valid:', decoded);
+} catch (err) {
+    console.error('Token verification failed:', err.message);
+}</code></pre>
+                    </div>
+
+                    <h3>Python Verification</h3>
+                    <div class="code-example">
+                        <pre><code class="language-python">import jwt
+
+# For HMAC tokens
+secret = 'your-secret-key'
+token = 'your-generated-token'
+
+try:
+    decoded = jwt.decode(token, secret, algorithms=['HS256'])
+    print('Token is valid:', decoded)
+except jwt.InvalidTokenError as e:
+    print('Token verification failed:', str(e))</code></pre>
+                    </div>
+
+                    <h3>curl Testing</h3>
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Test with generated token
+curl -H "Authorization: Bearer your-generated-token" \
+     https://api.example.com/protected-endpoint</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Related Tools</h2>
+                    <p>Combine the JWT Generator with other JWTAuditor tools for comprehensive JWT workflows:</p>
+                    
+                    <div class="tool-links">
+                        <a href="decoder-analyzer.html" class="tool-link">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <h4>Decoder & Analyzer</h4>
+                                <p>Validate and analyze your generated tokens</p>
+                            </div>
+                        </a>
+                        
+                        <a href="jwt-editor.html" class="tool-link">
+                            <i class="fas fa-edit"></i>
+                            <div>
+                                <h4>JWT Editor</h4>
+                                <p>Modify existing tokens or fine-tune generated ones</p>
+                            </div>
+                        </a>
+                        
+                        <a href="secret-bruteforcer.html" class="tool-link">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <h4>Secret Bruteforcer</h4>
+                                <p>Test token security by attempting to discover secrets</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="../js/docs.js"></script>
+</body>
+</html>

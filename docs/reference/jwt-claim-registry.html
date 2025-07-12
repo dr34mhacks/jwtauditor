@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Claim Registry Reference - JWTAuditor</title>
+    <meta name="description" content="Complete reference of registered JWT claims and their proper usage in JSON Web Tokens.">
+    <meta name="keywords" content="JWT, claims, registry, sub, iss, aud, exp, iat, nbf, jti">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="../tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="../tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="../tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="../tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="jwt-claim-registry.html" class="active">Claim Registry</a></li>
+                            <li><a href="jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Claim Registry Reference</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-list"></i> Reference Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 10 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        This reference guide provides a comprehensive list of registered JWT claims, their meanings, data types, and proper usage. Understanding these claims is essential for implementing secure and interoperable JWT-based systems.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Registered Claims Overview</h2>
+                    <p>
+                        Registered claims are predefined claims specified in RFC 7519 that provide a set of useful, interoperable claims. While their use is optional, they provide standardized ways to convey common information.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="info-content">
+                            <p><strong>Note:</strong> All timestamp-related claims use NumericDate format, which represents the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Core Registered Claims</h2>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Claim</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>iss</code></td>
+                                    <td>Issuer</td>
+                                    <td>String or URI</td>
+                                    <td>No</td>
+                                    <td>Principal that issued the JWT</td>
+                                </tr>
+                                <tr>
+                                    <td><code>sub</code></td>
+                                    <td>Subject</td>
+                                    <td>String or URI</td>
+                                    <td>No</td>
+                                    <td>Principal that is the subject of the JWT</td>
+                                </tr>
+                                <tr>
+                                    <td><code>aud</code></td>
+                                    <td>Audience</td>
+                                    <td>String, URI, or Array</td>
+                                    <td>No</td>
+                                    <td>Recipients that the JWT is intended for</td>
+                                </tr>
+                                <tr>
+                                    <td><code>exp</code></td>
+                                    <td>Expiration Time</td>
+                                    <td>NumericDate</td>
+                                    <td>No</td>
+                                    <td>Time after which the JWT expires</td>
+                                </tr>
+                                <tr>
+                                    <td><code>nbf</code></td>
+                                    <td>Not Before</td>
+                                    <td>NumericDate</td>
+                                    <td>No</td>
+                                    <td>Time before which the JWT must not be accepted</td>
+                                </tr>
+                                <tr>
+                                    <td><code>iat</code></td>
+                                    <td>Issued At</td>
+                                    <td>NumericDate</td>
+                                    <td>No</td>
+                                    <td>Time at which the JWT was issued</td>
+                                </tr>
+                                <tr>
+                                    <td><code>jti</code></td>
+                                    <td>JWT ID</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>Unique identifier for the JWT</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Detailed Claim Descriptions</h2>
+                    
+                    <h3>Issuer (iss)</h3>
+                    <p>The "iss" claim identifies the principal that issued the JWT. This claim should be a StringOrURI value that uniquely identifies the issuer.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// String identifier
+"iss": "my-auth-service"
+
+// URI identifier
+"iss": "https://auth.example.com"
+
+// Domain-based identifier
+"iss": "example.com"</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Use consistent issuer values across your application</li>
+                            <li>Consider using URIs for better uniqueness</li>
+                            <li>Validate the issuer claim on token verification</li>
+                            <li>Use different issuers for different environments (dev, staging, prod)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Subject (sub)</h3>
+                    <p>The "sub" claim identifies the principal that is the subject of the JWT. The subject value must be unique within the issuer's context or globally unique.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// User ID
+"sub": "1234567890"
+
+// Username
+"sub": "john.doe@example.com"
+
+// UUID
+"sub": "550e8400-e29b-41d4-a716-446655440000"
+
+// URI format
+"sub": "https://example.com/users/1234567890"</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Use immutable identifiers when possible</li>
+                            <li>Don't use personally identifiable information directly</li>
+                            <li>Ensure uniqueness within the issuer's scope</li>
+                            <li>Consider using UUIDs for better privacy</li>
+                        </ul>
+                    </div>
+
+                    <h3>Audience (aud)</h3>
+                    <p>The "aud" claim identifies the recipients that the JWT is intended for. This can be a single string/URI or an array of strings/URIs.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// Single audience
+"aud": "my-api-service"
+
+// Multiple audiences
+"aud": ["api-service", "admin-panel", "mobile-app"]
+
+// URI-based audience
+"aud": "https://api.example.com"</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Always validate the audience claim</li>
+                            <li>Use specific audience values for different services</li>
+                            <li>Consider token substitution attacks when using multiple audiences</li>
+                            <li>Document your audience naming conventions</li>
+                        </ul>
+                    </div>
+
+                    <h3>Expiration Time (exp)</h3>
+                    <p>The "exp" claim identifies the expiration time on or after which the JWT must not be accepted for processing.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// Expires in 1 hour (3600 seconds from Unix epoch)
+"exp": 1516242622
+
+// Expires on specific date
+"exp": 1672531199  // December 31, 2022 23:59:59 UTC</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Always include expiration times for security</li>
+                            <li>Use short expiration times for access tokens (15-30 minutes)</li>
+                            <li>Account for clock skew between systems</li>
+                            <li>Implement token refresh mechanisms for longer sessions</li>
+                        </ul>
+                    </div>
+
+                    <h3>Not Before (nbf)</h3>
+                    <p>The "nbf" claim identifies the time before which the JWT must not be accepted for processing.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// Valid starting from specific time
+"nbf": 1516239022
+
+// Valid immediately (current time)
+"nbf": 1516239022</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Use for scheduled token activation</li>
+                            <li>Helpful for pre-issued tokens</li>
+                            <li>Account for clock skew in validation</li>
+                            <li>Consider timezone differences</li>
+                        </ul>
+                    </div>
+
+                    <h3>Issued At (iat)</h3>
+                    <p>The "iat" claim identifies the time at which the JWT was issued.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// Token issued at specific time
+"iat": 1516239022</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Useful for token age validation</li>
+                            <li>Helps with clock skew handling</li>
+                            <li>Can be used for token freshness checks</li>
+                            <li>Valuable for audit trails</li>
+                        </ul>
+                    </div>
+
+                    <h3>JWT ID (jti)</h3>
+                    <p>The "jti" claim provides a unique identifier for the JWT. This can be used to prevent JWT replay attacks.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Valid Examples:</h4>
+                        <pre><code class="language-json">// UUID format
+"jti": "550e8400-e29b-41d4-a716-446655440000"
+
+// Random string
+"jti": "abc123def456"
+
+// Timestamp-based ID
+"jti": "1516239022-user123"</code></pre>
+                    </div>
+                    
+                    <div class="usage-tips">
+                        <h4>Usage Tips:</h4>
+                        <ul>
+                            <li>Use for token revocation mechanisms</li>
+                            <li>Ensure uniqueness across all tokens</li>
+                            <li>Consider using UUIDs or cryptographically secure random values</li>
+                            <li>Store JTIs for blacklisting capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Public Claims Registry</h2>
+                    <p>
+                        In addition to registered claims, there are public claims that are registered in the IANA JSON Web Token Claims Registry. Here are some commonly used public claims:
+                    </p>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Claim</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>name</code></td>
+                                    <td>Full Name</td>
+                                    <td>String</td>
+                                    <td>End-user's full name</td>
+                                </tr>
+                                <tr>
+                                    <td><code>given_name</code></td>
+                                    <td>Given Name</td>
+                                    <td>String</td>
+                                    <td>Given name(s) or first name(s)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>family_name</code></td>
+                                    <td>Family Name</td>
+                                    <td>String</td>
+                                    <td>Surname(s) or last name(s)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>email</code></td>
+                                    <td>Email Address</td>
+                                    <td>String</td>
+                                    <td>End-user's preferred e-mail address</td>
+                                </tr>
+                                <tr>
+                                    <td><code>email_verified</code></td>
+                                    <td>Email Verified</td>
+                                    <td>Boolean</td>
+                                    <td>True if email address has been verified</td>
+                                </tr>
+                                <tr>
+                                    <td><code>phone_number</code></td>
+                                    <td>Phone Number</td>
+                                    <td>String</td>
+                                    <td>End-user's preferred telephone number</td>
+                                </tr>
+                                <tr>
+                                    <td><code>address</code></td>
+                                    <td>Address</td>
+                                    <td>Object</td>
+                                    <td>End-user's preferred postal address</td>
+                                </tr>
+                                <tr>
+                                    <td><code>picture</code></td>
+                                    <td>Picture</td>
+                                    <td>String (URL)</td>
+                                    <td>URL of the end-user's profile picture</td>
+                                </tr>
+                                <tr>
+                                    <td><code>website</code></td>
+                                    <td>Website</td>
+                                    <td>String (URL)</td>
+                                    <td>URL of the end-user's website</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gender</code></td>
+                                    <td>Gender</td>
+                                    <td>String</td>
+                                    <td>End-user's gender</td>
+                                </tr>
+                                <tr>
+                                    <td><code>birthdate</code></td>
+                                    <td>Birth Date</td>
+                                    <td>String (ISO 8601)</td>
+                                    <td>End-user's birthday</td>
+                                </tr>
+                                <tr>
+                                    <td><code>zoneinfo</code></td>
+                                    <td>Time Zone</td>
+                                    <td>String</td>
+                                    <td>End-user's time zone</td>
+                                </tr>
+                                <tr>
+                                    <td><code>locale</code></td>
+                                    <td>Locale</td>
+                                    <td>String</td>
+                                    <td>End-user's locale</td>
+                                </tr>
+                                <tr>
+                                    <td><code>updated_at</code></td>
+                                    <td>Updated At</td>
+                                    <td>NumericDate</td>
+                                    <td>Time user information was last updated</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Custom Claims Best Practices</h2>
+                    
+                    <h3>Private Claims</h3>
+                    <p>Private claims are custom claims created to share information between parties that agree on using them.</p>
+                    
+                    <div class="claim-examples">
+                        <h4>Examples:</h4>
+                        <pre><code class="language-json">{
+  // Application-specific claims
+  "role": "admin",
+  "permissions": ["read", "write", "delete"],
+  "organization": "acme-corp",
+  "plan": "premium",
+  
+  // Use namespaces to avoid collisions
+  "https://example.com/claims/department": "engineering",
+  "example.com/user_type": "employee"
+}</code></pre>
+                    </div>
+                    
+                    <h3>Naming Conventions</h3>
+                    <ul>
+                        <li>Use descriptive, lowercase names with underscores</li>
+                        <li>Avoid conflicts with registered and public claims</li>
+                        <li>Consider using namespaces (URIs) for organization-specific claims</li>
+                        <li>Document all custom claims in your API documentation</li>
+                    </ul>
+                    
+                    <h3>Security Considerations</h3>
+                    <ul>
+                        <li>Never include sensitive information in claims</li>
+                        <li>Keep JWT payloads small for performance</li>
+                        <li>Validate all claims during token verification</li>
+                        <li>Consider using JWE for confidential claims</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Complete JWT Example</h2>
+                    
+                    <p>Here's an example of a JWT with properly formatted claims:</p>
+                    
+                    <pre><code class="language-json">{
+  // Registered claims
+  "iss": "https://auth.example.com",
+  "sub": "550e8400-e29b-41d4-a716-446655440000",
+  "aud": ["api.example.com", "mobile.example.com"],
+  "exp": 1516242622,
+  "nbf": 1516238022,
+  "iat": 1516238022,
+  "jti": "abc123def456",
+  
+  // Public claims
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "email_verified": true,
+  "picture": "https://example.com/avatars/john.jpg",
+  
+  // Private claims
+  "role": "admin",
+  "permissions": ["users:read", "users:write", "posts:read", "posts:write"],
+  "organization": "acme-corp",
+  "department": "engineering"
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Validation Examples</h2>
+                    
+                    <h3>Node.js Claim Validation</h3>
+                    <pre><code class="language-javascript">function validateJWTClaims(payload) {
+    const now = Math.floor(Date.now() / 1000);
+    const clockSkew = 60; // 60 seconds
+    
+    // Validate expiration
+    if (payload.exp && payload.exp <= now) {
+        throw new Error('Token has expired');
+    }
+    
+    // Validate not before
+    if (payload.nbf && payload.nbf > now + clockSkew) {
+        throw new Error('Token not yet valid');
+    }
+    
+    // Validate issued at (prevent tokens from future)
+    if (payload.iat && payload.iat > now + clockSkew) {
+        throw new Error('Token issued in the future');
+    }
+    
+    // Validate issuer
+    const allowedIssuers = ['https://auth.example.com'];
+    if (payload.iss && !allowedIssuers.includes(payload.iss)) {
+        throw new Error('Invalid issuer');
+    }
+    
+    // Validate audience
+    const expectedAudience = 'api.example.com';
+    if (payload.aud) {
+        const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+        if (!audiences.includes(expectedAudience)) {
+            throw new Error('Invalid audience');
+        }
+    }
+    
+    // Validate subject
+    if (!payload.sub) {
+        throw new Error('Missing subject claim');
+    }
+    
+    return payload;
+}</code></pre>
+
+                    <h3>Python Claim Validation</h3>
+                    <pre><code class="language-python">import time
+from datetime import datetime
+
+def validate_jwt_claims(payload):
+    now = int(time.time())
+    clock_skew = 60  # 60 seconds
+    
+    # Validate expiration
+    if 'exp' in payload and payload['exp'] <= now:
+        raise ValueError('Token has expired')
+    
+    # Validate not before
+    if 'nbf' in payload and payload['nbf'] > now + clock_skew:
+        raise ValueError('Token not yet valid')
+    
+    # Validate issued at
+    if 'iat' in payload and payload['iat'] > now + clock_skew:
+        raise ValueError('Token issued in the future')
+    
+    # Validate issuer
+    allowed_issuers = ['https://auth.example.com']
+    if 'iss' in payload and payload['iss'] not in allowed_issuers:
+        raise ValueError('Invalid issuer')
+    
+    # Validate audience
+    expected_audience = 'api.example.com'
+    if 'aud' in payload:
+        audiences = payload['aud'] if isinstance(payload['aud'], list) else [payload['aud']]
+        if expected_audience not in audiences:
+            raise ValueError('Invalid audience')
+    
+    # Validate subject
+    if 'sub' not in payload:
+        raise ValueError('Missing subject claim')
+    
+    return payload</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        Understanding and properly implementing JWT claims is crucial for building secure and interoperable authentication systems. Always validate claims according to your security requirements and follow established standards when possible.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Related Resources</h3>
+                        <div class="next-links">
+                            <a href="../jwt-claims.html" class="next-link">
+                                <i class="fas fa-info-circle"></i>
+                                <span>JWT Claims Explained</span>
+                            </a>
+                            <a href="../secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Secure JWT Implementation</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="../js/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: 
+                linear-gradient(rgba(48, 54, 61, 1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(48, 54, 61, 1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .decorative {
+            position: absolute;
+        }
+        
+        .circle1 {
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #00d4aa;
+            opacity: 0.1;
+        }
+        
+        .circle2 {
+            bottom: 130px;
+            right: 100px;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #55efc4;
+            opacity: 0.1;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 150px;
+            top: 200px;
+            width: 100px;
+            height: 140px;
+        }
+        
+        .shield {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(135deg, #00d4aa, #55efc4);
+            clip-path: polygon(10% 15%, 90% 15%, 90% 60%, 50% 90%, 10% 60%);
+            position: relative;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.5));
+        }
+        
+        .lock {
+            position: absolute;
+            top: 30px;
+            left: 25px;
+            width: 50px;
+            height: 40px;
+            background: #0d1117;
+            border-radius: 5px;
+        }
+        
+        .lock::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            width: 30px;
+            height: 20px;
+            border: 6px solid #0d1117;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .lock::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 18px;
+            width: 14px;
+            height: 14px;
+            background: #00d4aa;
+            border-radius: 50%;
+        }
+        
+        .keyhole {
+            position: absolute;
+            top: 24px;
+            left: 21px;
+            width: 8px;
+            height: 10px;
+            background: #00d4aa;
+        }
+        
+        .title {
+            position: absolute;
+            left: 300px;
+            top: 240px;
+            font-size: 64px;
+            font-weight: 700;
+            color: #f0f6fc;
+            margin: 0;
+        }
+        
+        .subtitle {
+            position: absolute;
+            left: 300px;
+            top: 320px;
+            font-size: 24px;
+            font-weight: 400;
+            color: #8b949e;
+            margin: 0;
+        }
+        
+        .features {
+            position: absolute;
+            left: 300px;
+            top: 360px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #00d4aa;
+        }
+        
+        .features div {
+            margin-bottom: 8px;
+        }
+        
+        .domain {
+            position: absolute;
+            left: 300px;
+            top: 550px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: #55efc4;
+        }
+        
+        .jwt-token {
+            position: absolute;
+            right: 150px;
+            top: 380px;
+            width: 400px;
+            height: 120px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            opacity: 0.3;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #8b949e;
+            line-height: 20px;
+        }
+        
+        .jwt-signature {
+            color: #00d4aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid"></div>
+    <div class="decorative circle1"></div>
+    <div class="decorative circle2"></div>
+    
+    <div class="logo">
+        <div class="shield">
+            <div class="lock">
+                <div class="keyhole"></div>
+            </div>
+        </div>
+    </div>
+    
+    <h1 class="title">JWTAuditor</h1>
+    <p class="subtitle">Advanced JWT Security Testing Platform</p>
+    
+    <div class="features">
+        <div>🔍 Security Analysis</div>
+        <div>⚡ Secret Bruteforcing</div>
+        <div>✏️ JWT Editor</div>
+        <div>🔒 100% Client-Side</div>
+    </div>
+    
+    <div class="domain">jwtauditor.com</div>
+    
+    <div class="jwt-token">
+        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<br>
+        eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6<br>
+        "JWTAuditor","iat":1516239022}<br>
+        <span class="jwt-signature">SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV</span>
+    </div>
+</body>
+</html>

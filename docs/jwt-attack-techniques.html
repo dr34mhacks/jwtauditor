@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Attack Techniques - JWTAuditor</title>
+    <meta name="description" content="Learn about common JWT attack techniques including algorithm confusion, weak secrets, and token tampering.">
+    <meta name="keywords" content="JWT, attack techniques, algorithm confusion, none algorithm, token tampering">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html" class="active">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Attack Techniques</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-user-ninja"></i> Security Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 12 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        JSON Web Tokens (JWTs) are widely used for authentication and authorization, but they can be vulnerable to various attacks if not implemented correctly. This guide explores common JWT attack techniques, how they work, and how to protect against them.
+                    </p>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Important:</strong> This guide is for educational purposes only. Use this knowledge to secure your applications, not to attack others.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Common JWT Attack Techniques</h2>
+                    
+                    <p>Here are the most common attack techniques targeting JWT implementations:</p>
+                    
+                    <div class="attack-techniques">
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-random"></i> Algorithm Confusion</h3>
+                            <p>Exploiting implementations that don't validate the algorithm specified in the header.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-ban"></i> None Algorithm</h3>
+                            <p>Setting the algorithm to "none" to bypass signature verification.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-key"></i> Weak Secret Keys</h3>
+                            <p>Brute-forcing weak HMAC secrets used to sign tokens.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-edit"></i> Token Tampering</h3>
+                            <p>Modifying the payload to change claims like user roles or permissions.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-clock"></i> Token Replay</h3>
+                            <p>Reusing captured tokens after they should have expired.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-key"></i> Key ID Injection</h3>
+                            <p>Manipulating the "kid" parameter to force the use of a specific key.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-certificate"></i> JWK Header Injection</h3>
+                            <p>Embedding malicious public keys in the "jwk" header parameter.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-link"></i> JWK Set URL Injection</h3>
+                            <p>Manipulating "jku" parameter to fetch keys from attacker-controlled URLs.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-signature"></i> Signature Bypass</h3>
+                            <p>Exploiting implementations that don't properly verify signatures.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-user-secret"></i> X.509 Certificate Injection</h3>
+                            <p>Injecting self-signed certificates via the "x5c" header parameter.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-file-code"></i> Content Type Manipulation</h3>
+                            <p>Changing the "cty" parameter to enable XXE or deserialization attacks.</p>
+                        </div>
+                        
+                        <div class="attack-technique">
+                            <h3><i class="fas fa-folder-open"></i> Directory Traversal</h3>
+                            <p>Using path traversal in "kid" parameter to access sensitive files.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Algorithm Confusion Attack</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        Algorithm confusion (also known as algorithm substitution) attacks exploit implementations that don't properly validate the algorithm specified in the JWT header. The attack involves changing the algorithm from an asymmetric algorithm (like RS256) to a symmetric one (like HS256).
+                    </p>
+                    
+                    <div class="attack-steps">
+                        <div class="attack-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <p>The server uses RS256 (RSA) to sign tokens with a private key and verify them with a public key.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <p>The attacker obtains the public key (which is often publicly available).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <p>The attacker changes the algorithm in the header from RS256 to HS256.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <p>The attacker signs the token using HS256 with the public key as the secret.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <p>If the server doesn't validate the algorithm, it will use the public key as an HMAC secret to verify the token.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Example Attack</h3>
+                    <pre><code class="language-javascript">// Original JWT header (RS256)
+{
+  "alg": "RS256",
+  "typ": "JWT"
+}
+
+// Modified JWT header (HS256)
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+// The attacker then signs the token with HS256 using the public key as the secret</code></pre>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Always validate the algorithm and reject tokens with unexpected algorithms</li>
+                        <li>Use a whitelist approach to only accept specific algorithms</li>
+                        <li>Implement strict type checking for keys based on the algorithm</li>
+                        <li>Use libraries that prevent algorithm confusion by design</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>None Algorithm Attack</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        The "none" algorithm attack exploits implementations that accept tokens with the "none" algorithm, which indicates that the token is not signed. If a server accepts such tokens, an attacker can forge tokens without needing any secret keys.
+                    </p>
+                    
+                    <div class="attack-steps">
+                        <div class="attack-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <p>The attacker takes a valid JWT and decodes it.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <p>The attacker modifies the header to set "alg" to "none".</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <p>The attacker modifies the payload as desired (e.g., changing user roles).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <p>The attacker creates a new token with an empty signature or removes the signature entirely.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Example Attack</h3>
+                    <pre><code class="language-javascript">// Original JWT header
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+// Modified JWT header
+{
+  "alg": "none",
+  "typ": "JWT"
+}
+
+// The signature part is either empty or removed entirely
+// Format: header.payload.  (note the trailing dot with nothing after it)</code></pre>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Explicitly reject tokens with the "none" algorithm</li>
+                        <li>Use a whitelist of allowed algorithms</li>
+                        <li>Ensure your JWT library doesn't accept "none" algorithm by default</li>
+                        <li>Always verify signatures regardless of the algorithm specified</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Weak Secret Keys Attack</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        When JWTs are signed with HMAC algorithms (HS256, HS384, HS512) using weak secrets, attackers can brute-force the secret and forge valid tokens. Common weak secrets include dictionary words, short strings, or predictable patterns.
+                    </p>
+                    
+                    <div class="attack-steps">
+                        <div class="attack-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <p>The attacker obtains a valid JWT signed with an HMAC algorithm.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <p>The attacker uses a dictionary or brute-force approach to guess the secret key.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <p>For each guess, the attacker tries to verify the token's signature.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <p>Once the correct secret is found, the attacker can create new tokens with any payload.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Tools Used</h3>
+                    <ul>
+                        <li><strong>JWTAuditor Secret Bruteforcer</strong>: Our tool for testing JWT secrets against common dictionaries</li>
+                        <li><strong>Hashcat</strong>: A popular password cracking tool that supports JWT cracking</li>
+                        <li><strong>John the Ripper</strong>: Another password cracking tool with JWT support</li>
+                    </ul>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Use strong, randomly generated secrets of at least 256 bits (32 bytes)</li>
+                        <li>Consider using asymmetric algorithms (RS256, ES256) instead of HMAC</li>
+                        <li>Rotate secrets regularly</li>
+                        <li>Use a secret manager to generate and store strong secrets</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Token Tampering</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        Token tampering involves modifying the payload of a JWT to change claims like user roles, permissions, or identities. This attack is only possible if the attacker can also create a valid signature, which might be achieved through other attacks like algorithm confusion or weak secrets.
+                    </p>
+                    
+                    <h3>Example Attack</h3>
+                    <pre><code class="language-javascript">// Original JWT payload
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "role": "user",
+  "iat": 1516239022,
+  "exp": 1516242622
+}
+
+// Tampered JWT payload
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "role": "admin",  // Changed from "user" to "admin"
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Use strong signature algorithms and keys</li>
+                        <li>Implement proper server-side validation of claims</li>
+                        <li>Don't rely solely on JWT claims for critical authorization decisions</li>
+                        <li>Consider using encrypted JWTs (JWE) for sensitive data</li>
+                        <li>Implement additional server-side checks for sensitive operations</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Token Replay Attack</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        Token replay attacks involve capturing a valid JWT and reusing it after it should have been invalidated, such as after logout or expiration. This is particularly problematic in systems that don't properly track token usage or don't implement token revocation.
+                    </p>
+                    
+                    <div class="attack-steps">
+                        <div class="attack-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <p>The attacker intercepts a valid JWT (e.g., through network sniffing or XSS).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <p>The legitimate user logs out or their session expires.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <p>The attacker reuses the captured token to access protected resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Use short expiration times for tokens</li>
+                        <li>Implement token blacklisting for logged-out tokens</li>
+                        <li>Use the JWT ID (jti) claim to track and revoke specific tokens</li>
+                        <li>Implement refresh token rotation</li>
+                        <li>Use secure, HttpOnly cookies for token storage to mitigate XSS risks</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Key ID (kid) Injection</h2>
+                    
+                    <h3>How It Works</h3>
+                    <p>
+                        The "kid" (Key ID) parameter in the JWT header is used to indicate which key should be used to verify the signature. If this parameter is not properly validated, attackers can manipulate it to point to a key they control or to exploit path traversal vulnerabilities.
+                    </p>
+                    
+                    <div class="attack-steps">
+                        <div class="attack-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <p>The attacker identifies a JWT implementation that uses the "kid" parameter to select verification keys.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <p>The attacker modifies the "kid" parameter to point to a key they control or to exploit path traversal.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attack-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <p>If successful, the server uses the attacker-controlled key to verify the signature.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Example Attack</h3>
+                    <pre><code class="language-javascript">// Original JWT header
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "key1"
+}
+
+// Modified JWT header with path traversal
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "../../public/key"
+}
+
+// Modified JWT header pointing to a known weak key
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "weak_key"
+}</code></pre>
+                    
+                    <h3>Prevention</h3>
+                    <ul>
+                        <li>Validate and sanitize the "kid" parameter</li>
+                        <li>Use a whitelist approach for allowed key IDs</li>
+                        <li>Avoid using file paths in the "kid" parameter</li>
+                        <li>Implement proper access controls for key storage</li>
+                        <li>Use a key management system with secure key rotation</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Practical Testing with JWTAuditor</h2>
+                    <p>
+                        JWTAuditor provides several tools to help you test your JWT implementation for these vulnerabilities:
+                    </p>
+                    
+                    <div class="tool-links">
+                        <a href="tool-guides/decoder-analyzer.html" class="tool-link">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <h3>Decoder & Analyzer</h3>
+                                <p>Analyze JWTs for potential vulnerabilities and weak configurations</p>
+                            </div>
+                        </a>
+                        
+                        <a href="tool-guides/secret-bruteforcer.html" class="tool-link">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <h3>Secret Bruteforcer</h3>
+                                <p>Test if your JWT is signed with a weak secret</p>
+                            </div>
+                        </a>
+                        
+                        <a href="tool-guides/jwt-editor.html" class="tool-link">
+                            <i class="fas fa-edit"></i>
+                            <div>
+                                <h3>JWT Editor</h3>
+                                <p>Modify JWT headers and payloads to test for tampering vulnerabilities</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        JWT security depends on proper implementation and validation. By understanding these attack techniques, you can better protect your applications from potential vulnerabilities.
+                    </p>
+                    <p>
+                        Always follow security best practices, use up-to-date libraries, implement proper validation, and regularly test your JWT implementation for vulnerabilities.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <div class="next-links">
+                            <a href="secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Learn Secure JWT Implementation</span>
+                            </a>
+                            <a href="tool-guides/decoder-analyzer.html" class="next-link">
+                                <i class="fas fa-search"></i>
+                                <span>Try the JWT Analyzer Tool</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize syntax highlighting
+            hljs.highlightAll();
+            
+            // Mobile sidebar toggle
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.docs-sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

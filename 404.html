@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | JWTAuditor</title>
+    <meta name="description" content="The requested page was not found on JWTAuditor. Return to the JWT security testing tool or browse our documentation.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+    <style>
+        .error-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
+        }
+        
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .error-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .error-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--dark-bg);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .error-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-effect), var(--box-shadow-lg);
+        }
+        
+        .error-link i {
+            margin-right: 0.5rem;
+        }
+        
+        .secondary-link {
+            background: var(--dark-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .secondary-link:hover {
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-message">Page Not Found</h1>
+        <p class="error-description">
+            The page you're looking for doesn't exist or has been moved. 
+            Let's get you back to analyzing JWT tokens securely.
+        </p>
+        
+        <div class="error-actions">
+            <a href="/" class="error-link">
+                <i class="fas fa-home"></i>
+                Back to JWTAuditor
+            </a>
+            <a href="/docs/" class="error-link secondary-link">
+                <i class="fas fa-book"></i>
+                Browse Documentation
+            </a>
+            <a href="/about.html" class="error-link secondary-link">
+                <i class="fas fa-info-circle"></i>
+                About Us
+            </a>
+        </div>
+    </div>
+</body>
+</html>

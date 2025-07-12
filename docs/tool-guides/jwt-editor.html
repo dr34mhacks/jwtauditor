@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Editor Guide - JWTAuditor Documentation</title>
+    <meta name="description" content="Learn how to use JWTAuditor's JWT Editor tool to modify JWT headers, payloads, and re-sign tokens with various algorithms.">
+    <meta name="keywords" content="JWT, editor, modify, re-sign, header, payload, signature">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="jwt-editor.html" class="active">JWT Editor</a></li>
+                            <li><a href="jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="../reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="../reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="../reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Editor Guide</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-edit"></i> Advanced Tool</span>
+                        <span><i class="fas fa-clock"></i> Updated: May 2024</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        The JWT Editor is a powerful tool that allows you to modify existing JWT tokens by editing their headers and payloads, then re-signing them with different algorithms and keys. This is essential for testing JWT implementations and exploring potential security vulnerabilities.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>What is JWT Editing?</h2>
+                    <p>
+                        JWT editing involves modifying the contents of a JWT token while maintaining its structural integrity. This includes:
+                    </p>
+                    <ul>
+                        <li><strong>Header modification:</strong> Changing algorithm, type, or other header parameters</li>
+                        <li><strong>Payload modification:</strong> Altering claims like user ID, roles, expiration time</li>
+                        <li><strong>Re-signing:</strong> Generating a new signature with a different key or algorithm</li>
+                        <li><strong>Algorithm confusion:</strong> Testing how applications handle algorithm changes</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <div class="info-content">
+                            <strong>Use Cases:</strong> JWT editing is commonly used for privilege escalation testing, authentication bypass attempts, and exploring JWT implementation flaws.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>How to Use the JWT Editor</h2>
+                    
+                    <h3>Step 1: Navigate to the Tool</h3>
+                    <p>Click on the "✏️ JWT Editor" tab in the main JWTAuditor interface.</p>
+
+                    <h3>Step 2: Load a JWT Token</h3>
+                    <p>Paste your JWT token in the "JWT Token to Edit" field and click "Load JWT". The tool will:</p>
+                    <ul>
+                        <li>Parse and validate the token structure</li>
+                        <li>Extract the header and payload</li>
+                        <li>Display them in editable JSON format</li>
+                        <li>Set the signature algorithm selector</li>
+                    </ul>
+                    
+                    <div class="tip-box">
+                        <div class="tip-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="tip-content">
+                            <p><strong>Tip:</strong> The editor automatically formats JSON for better readability. Ensure your modifications maintain valid JSON syntax, or the tool will display a validation error.</p>
+                        </div>
+                    </div>
+
+                    <h3>Step 3: Edit the Header</h3>
+                    <p>Modify the header JSON in the Header editor. Common modifications include:</p>
+                    
+                    <div class="code-example">
+                        <h4>Algorithm Change</h4>
+                        <pre><code class="language-json">{
+  "alg": "none",  // Changed from "HS256"
+  "typ": "JWT"
+}</code></pre>
+                    </div>
+
+                    <div class="code-example">
+                        <h4>Adding Key ID</h4>
+                        <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "../../etc/passwd"  // Path traversal attempt
+}</code></pre>
+                    </div>
+
+                    <h3>Step 4: Edit the Payload</h3>
+                    <p>Modify the payload JSON to change claims. Common testing scenarios:</p>
+                    
+                    <div class="code-example">
+                        <h4>Privilege Escalation</h4>
+                        <pre><code class="language-json">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "role": "admin",  // Changed from "user"
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <div class="code-example">
+                        <h4>User Impersonation</h4>
+                        <pre><code class="language-json">{
+  "sub": "999999999",  // Changed user ID
+  "name": "Administrator",
+  "role": "admin",
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    </div>
+
+                    <h3>Step 5: Configure Signature Options</h3>
+                    <p>Choose the signing algorithm and provide the necessary keys:</p>
+                    
+                    <div class="algorithm-options">
+                        <div class="option-card">
+                            <h4>none Algorithm</h4>
+                            <p>No signature required. Used to test if the application accepts unsigned tokens.</p>
+                            <p><strong>Risk:</strong> Complete authentication bypass if accepted.</p>
+                        </div>
+                        
+                        <div class="option-card">
+                            <h4>HMAC Algorithms (HS256, HS384, HS512)</h4>
+                            <p>Requires a shared secret key. Use known or brute-forced secrets.</p>
+                            <p><strong>Example:</strong> <code>mysecretkey</code></p>
+                        </div>
+                        
+                        <div class="option-card">
+                            <h4>RSA Algorithms (RS256, RS384, RS512)</h4>
+                            <p>Requires a private key for signing. Use for testing with known private keys.</p>
+                            <p><strong>Note:</strong> Only the private key is needed for signing.</p>
+                        </div>
+                    </div>
+
+                    <h3>Step 6: Generate the Modified Token</h3>
+                    <p>Click "Generate JWT" to create the modified token. The tool will:</p>
+                    <ul>
+                        <li>Validate the JSON syntax</li>
+                        <li>Update the algorithm in the header</li>
+                        <li>Generate the appropriate signature</li>
+                        <li>Display the complete modified JWT</li>
+                    </ul>
+
+                    <h3>Step 7: Copy and Test</h3>
+                    <p>Use the "Copy to Clipboard" button to copy the modified token and test it in your target application.</p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Common Attack Scenarios</h2>
+                    
+                    <h3>1. Algorithm Confusion Attack</h3>
+                    <p>Test if the application accepts tokens with different algorithms:</p>
+                    
+                    <div class="attack-scenario">
+                        <h4>none Algorithm Bypass</h4>
+                        <p>Change the algorithm to "none" to test if the application accepts unsigned tokens.</p>
+                        <div class="code-example">
+                            <pre><code class="language-json">// Original Header
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+// Modified Header
+{
+  "alg": "none",
+  "typ": "JWT"
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="attack-scenario">
+                        <h4>HMAC to RSA Confusion</h4>
+                        <p>Change from HMAC to RSA algorithm using the RSA public key as HMAC secret.</p>
+                        <div class="code-example">
+                            <pre><code class="language-json">// Original Header
+{
+  "alg": "RS256",
+  "typ": "JWT"
+}
+
+// Modified Header
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+                        </div>
+                        <p>Then use the RSA public key as the HMAC secret when re-signing.</p>
+                    </div>
+
+                    <h3>2. Privilege Escalation</h3>
+                    <p>Modify user roles and permissions in the payload:</p>
+                    
+                    <div class="code-example">
+                        <pre><code class="language-json">// Original Payload
+{
+  "sub": "1234567890",
+  "name": "Regular User",
+  "role": "user",
+  "permissions": ["read"]
+}
+
+// Modified Payload
+{
+  "sub": "1234567890",
+  "name": "Regular User",
+  "role": "admin",
+  "permissions": ["read", "write", "delete", "admin"]
+}</code></pre>
+                    </div>
+
+                    <h3>3. Token Expiration Bypass</h3>
+                    <p>Extend or remove expiration times:</p>
+                    
+                    <div class="code-example">
+                        <pre><code class="language-json">// Original Payload (expired)
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022,
+  "exp": 1516242622  // Past expiration
+}
+
+// Modified Payload (future expiration)
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022,
+  "exp": 1915934400  // Year 2030
+}</code></pre>
+                    </div>
+
+                    <h3>4. User Impersonation</h3>
+                    <p>Change user identifiers to impersonate other users:</p>
+                    
+                    <div class="code-example">
+                        <pre><code class="language-json">// Original Payload
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+
+// Modified Payload
+{
+  "sub": "0000000001",  // Admin user ID
+  "name": "Administrator",
+  "email": "admin@example.com"
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Advanced Features</h2>
+                    
+                    <h3>Signature Verification</h3>
+                    <p>The JWT Editor includes a signature verification feature to test if a secret key is correct:</p>
+                    <ol>
+                        <li>Load a JWT token</li>
+                        <li>Enter a suspected secret key</li>
+                        <li>Click "Verify Signature"</li>
+                        <li>The tool will confirm if the key is valid</li>
+                    </ol>
+
+                    <h3>JSON Validation</h3>
+                    <p>The editor automatically validates JSON syntax and provides error messages for invalid JSON structures.</p>
+
+                    <h3>Algorithm Support</h3>
+                    <p>JWTAuditor supports all common JWT algorithms:</p>
+                    <ul>
+                        <li><strong>none:</strong> No signature</li>
+                        <li><strong>HS256/HS384/HS512:</strong> HMAC with SHA-256/384/512</li>
+                        <li><strong>RS256/RS384/RS512:</strong> RSA with SHA-256/384/512</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Best Practices</h2>
+                    
+                    <h3>For Penetration Testers</h3>
+                    <ul>
+                        <li>Always test the original token before modifications</li>
+                        <li>Start with simple modifications (algorithm change)</li>
+                        <li>Test each modification separately to identify what works</li>
+                        <li>Document successful modifications for reporting</li>
+                        <li>Consider the business impact of successful modifications</li>
+                    </ul>
+
+                    <h3>For Developers</h3>
+                    <ul>
+                        <li>Use this tool to test your JWT validation logic</li>
+                        <li>Verify that your application rejects modified tokens</li>
+                        <li>Test algorithm confusion scenarios</li>
+                        <li>Ensure proper signature verification</li>
+                        <li>Validate all claims thoroughly</li>
+                    </ul>
+
+                    <h3>Security Testing Checklist</h3>
+                    <ul>
+                        <li>☐ Test "none" algorithm acceptance</li>
+                        <li>☐ Test HMAC to RSA algorithm confusion</li>
+                        <li>☐ Test privilege escalation through role modification</li>
+                        <li>☐ Test user impersonation through ID changes</li>
+                        <li>☐ Test expiration bypass</li>
+                        <li>☐ Test signature verification with invalid keys</li>
+                        <li>☐ Test malformed JSON handling</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>RSA Key Management</h2>
+                    
+                    <h3>Private Key Format</h3>
+                    <p>RSA private keys should be in PEM format:</p>
+                    
+                    <div class="code-example">
+                        <pre><code>-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA2Z3QX0BTLS5+o6zXITG3MuHE8PVDRvn1wQ3lTe7YmQsS8U8a
+...
+-----END RSA PRIVATE KEY-----</code></pre>
+                    </div>
+
+                    <h3>Key Generation</h3>
+                    <p>You can generate RSA keys using OpenSSL:</p>
+                    
+                    <div class="code-example">
+                        <pre><code class="language-bash"># Generate private key
+openssl genrsa -out private_key.pem 2048
+
+# Extract public key
+openssl rsa -in private_key.pem -pubout -out public_key.pem</code></pre>
+                    </div>
+
+                    <h3>Testing with Public Keys</h3>
+                    <p>For algorithm confusion attacks, you may need to use the public key as an HMAC secret. Convert the public key to the appropriate format first.</p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Troubleshooting</h2>
+                    
+                    <div class="faq-item">
+                        <h4>Q: I get "Invalid JSON" errors when editing</h4>
+                        <p>A: Ensure your JSON is properly formatted with correct quotes, commas, and brackets. Use a JSON validator if needed.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: The signature verification fails</h4>
+                        <p>A: Double-check that you're using the correct secret key and that it matches the algorithm. For RSA, ensure you're using the private key.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: The application still rejects my modified token</h4>
+                        <p>A: The application may have additional validation beyond signature verification. Check that all claims are valid and that the token structure is correct.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h4>Q: How do I know if my attack succeeded?</h4>
+                        <p>A: Test the modified token in the target application. Look for successful authentication, access to restricted resources, or elevated privileges.</p>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Security Considerations</h2>
+                    
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        <div class="warning-content">
+                            <strong>Legal Notice:</strong> Only use this tool on systems you own or have explicit permission to test. Unauthorized modification of authentication tokens may violate laws and terms of service.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-shield-alt info-icon"></i>
+                        <div class="info-content">
+                            <strong>Privacy:</strong> All token editing is performed locally in your browser. No tokens or keys are transmitted to external servers.
+                        </div>
+                    </div>
+
+                    <p>Additional security considerations:</p>
+                    <ul>
+                        <li>Be aware that your testing activities may be logged</li>
+                        <li>Consider the impact of successful privilege escalation</li>
+                        <li>Document all successful attacks for remediation</li>
+                        <li>Follow responsible disclosure practices</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Related Tools</h2>
+                    <p>Combine the JWT Editor with other JWTAuditor tools for comprehensive testing:</p>
+                    
+                    <div class="tool-links">
+                        <a href="decoder-analyzer.html" class="tool-link">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <h4>Decoder & Analyzer</h4>
+                                <p>Analyze tokens before editing to identify potential vulnerabilities</p>
+                            </div>
+                        </a>
+                        
+                        <a href="secret-bruteforcer.html" class="tool-link">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <h4>Secret Bruteforcer</h4>
+                                <p>Discover weak secrets that can be used for re-signing tokens</p>
+                            </div>
+                        </a>
+                        
+                        <a href="jwt-generator.html" class="tool-link">
+                            <i class="fas fa-plus-circle"></i>
+                            <div>
+                                <h4>JWT Generator</h4>
+                                <p>Create completely new tokens for testing purposes</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 A Project by <a href="https://github.com/dr34mhacks"></a>Sid </a>& <a href="https://github.com/thecybersandeep">Sandeep</a>• Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a></p>
+            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="../js/docs.js"></script>
+</body>
+</html>

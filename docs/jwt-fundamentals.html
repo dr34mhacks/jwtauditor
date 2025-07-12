@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Fundamentals: Understanding JSON Web Tokens - JWTAuditor</title>
+    <meta name="description" content="Learn about JWT structure, claims, and concepts. Understand how JSON Web Tokens work and their use cases in modern authentication systems.">
+    <meta name="keywords" content="JWT, JSON Web Token, structure, claims, authentication, authorization">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html" class="active">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Fundamentals: Understanding JSON Web Tokens</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-book"></i> Core Concepts</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 10 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>What is a JWT?</h2>
+                    <p class="lead">
+                        JSON Web Token (JWT) is an open standard (<a href="https://tools.ietf.org/html/rfc7519" target="_blank">RFC 7519</a>) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="info-content">
+                            <p>JWTs can be signed using a secret (with the HMAC algorithm) or a public/private key pair using RSA or ECDSA. Signed tokens can verify the integrity of the claims contained within them, while encrypted tokens hide those claims from other parties.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT Structure</h2>
+                    <p>
+                        A JWT consists of three parts separated by dots (<code>.</code>):
+                    </p>
+                    
+                    <pre><code class="language-text">xxxxx.yyyyy.zzzzz</code></pre>
+                    
+                    <p>These parts are:</p>
+                    
+                    <ol>
+                        <li><strong>Header</strong> - Contains metadata about the token</li>
+                        <li><strong>Payload</strong> - Contains the claims or assertions</li>
+                        <li><strong>Signature</strong> - Verifies the token hasn't been altered</li>
+                    </ol>
+                    
+                    <p>Let's examine each part in detail:</p>
+                    
+                    <h3>Header</h3>
+                    <p>
+                        The header typically consists of two parts:
+                    </p>
+                    <ul>
+                        <li>The type of token, which is JWT</li>
+                        <li>The signing algorithm being used, such as HMAC SHA256 or RSA</li>
+                    </ul>
+                    
+                    <p>Example:</p>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+                    
+                    <p>This JSON is Base64Url encoded to form the first part of the JWT.</p>
+                    
+                    <h3>Payload</h3>
+                    <p>
+                        The payload contains the claims. Claims are statements about an entity (typically, the user) and additional data. There are three types of claims:
+                    </p>
+                    
+                    <ol>
+                        <li>
+                            <strong>Registered claims</strong>: Predefined claims which are not mandatory but recommended
+                            <ul>
+                                <li><code>iss</code> (issuer): who issued the token</li>
+                                <li><code>sub</code> (subject): who the token refers to</li>
+                                <li><code>aud</code> (audience): who the token is intended for</li>
+                                <li><code>exp</code> (expiration time): when the token expires</li>
+                                <li><code>nbf</code> (not before): when the token starts being valid</li>
+                                <li><code>iat</code> (issued at): when the token was issued</li>
+                                <li><code>jti</code> (JWT ID): unique identifier for the token</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Public claims</strong>: Claims defined by those using JWTs
+                            <ul>
+                                <li>Should be defined in the <a href="https://www.iana.org/assignments/jwt/jwt.xhtml" target="_blank">IANA JSON Web Token Registry</a> or as a URI that contains a collision-resistant namespace</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Private claims</strong>: Custom claims created to share information between parties
+                        </li>
+                    </ol>
+                    
+                    <p>Example:</p>
+                    <pre><code class="language-json">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true,
+  "iat": 1516239022,
+  "exp": 1516242622
+}</code></pre>
+                    
+                    <p>This JSON is Base64Url encoded to form the second part of the JWT.</p>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Security Note:</strong> The payload is only Base64Url encoded, not encrypted. Anyone can decode it to view its contents. Never put sensitive information like passwords in the JWT payload unless you're using JWE (JSON Web Encryption).</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Signature</h3>
+                    <p>
+                        The signature is created by taking the encoded header, the encoded payload, a secret, and the algorithm specified in the header, and signing them.
+                    </p>
+                    
+                    <p>For example, if you're using the HMAC SHA256 algorithm:</p>
+                    
+                    <pre><code class="language-text">HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)</code></pre>
+                    
+                    <p>
+                        The signature is used to verify that the message wasn't changed along the way, and, in the case of tokens signed with a private key, it can also verify that the sender of the JWT is who it says it is.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT Encoding Process</h2>
+                    <ol>
+                        <li>Create a header JSON object</li>
+                        <li>Create a payload JSON object</li>
+                        <li>Base64Url encode the header</li>
+                        <li>Base64Url encode the payload</li>
+                        <li>Create a signature using the encoded header, encoded payload, and a secret</li>
+                        <li>Concatenate the encoded header, encoded payload, and signature with dots</li>
+                    </ol>
+                    
+                    <div class="code-diagram">
+                        <div class="diagram-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Header</h4>
+                                <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="diagram-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="diagram-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Base64Url Encoded Header</h4>
+                                <pre><code class="language-text">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</code></pre>
+                            </div>
+                        </div>
+                        <div class="diagram-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Payload</h4>
+                                <pre><code class="language-json">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="diagram-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="diagram-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Base64Url Encoded Payload</h4>
+                                <pre><code class="language-text">eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ</code></pre>
+                            </div>
+                        </div>
+                        <div class="diagram-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Signature</h4>
+                                <pre><code class="language-text">HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)</code></pre>
+                            </div>
+                        </div>
+                        <div class="diagram-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="diagram-step">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>Complete JWT</h4>
+                                <pre><code class="language-text jwt-token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT Verification Process</h2>
+                    <ol>
+                        <li>Split the JWT into its three parts</li>
+                        <li>Base64Url decode the header and payload</li>
+                        <li>Verify the signature using the algorithm specified in the header</li>
+                        <li>Check the claims (exp, nbf, iss, etc.) to ensure they're valid</li>
+                        <li>Process the JWT according to the application's requirements</li>
+                    </ol>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT vs. Session Tokens</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>JWT</th>
+                                    <th>Session Tokens</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Storage</td>
+                                    <td>Client-side</td>
+                                    <td>Server-side</td>
+                                </tr>
+                                <tr>
+                                    <td>Scalability</td>
+                                    <td>Highly scalable (stateless)</td>
+                                    <td>Requires session storage</td>
+                                </tr>
+                                <tr>
+                                    <td>Security</td>
+                                    <td>Signed, can be encrypted</td>
+                                    <td>Opaque reference</td>
+                                </tr>
+                                <tr>
+                                    <td>Size</td>
+                                    <td>Larger (contains claims)</td>
+                                    <td>Smaller (just an ID)</td>
+                                </tr>
+                                <tr>
+                                    <td>Expiration</td>
+                                    <td>Self-contained</td>
+                                    <td>Controlled by server</td>
+                                </tr>
+                                <tr>
+                                    <td>Revocation</td>
+                                    <td>Difficult without a blacklist</td>
+                                    <td>Easy (delete from store)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Common JWT Use Cases</h2>
+                    
+                    <div class="use-case">
+                        <div class="use-case-icon"><i class="fas fa-user-check"></i></div>
+                        <div class="use-case-content">
+                            <h3>Authentication</h3>
+                            <p>After a user logs in, each subsequent request will include the JWT, allowing the user to access routes, services, and resources that are permitted with that token.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="use-case">
+                        <div class="use-case-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="use-case-content">
+                            <h3>Information Exchange</h3>
+                            <p>JWTs are a good way of securely transmitting information between parties because they can be signed, which means you can be sure the senders are who they say they are.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="use-case">
+                        <div class="use-case-icon"><i class="fas fa-lock"></i></div>
+                        <div class="use-case-content">
+                            <h3>Authorization</h3>
+                            <p>Once a user is logged in, an application can allow access to specific resources based on permissions encoded in the JWT.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="use-case">
+                        <div class="use-case-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="use-case-content">
+                            <h3>Federated Identity</h3>
+                            <p>JWTs are used in single sign-on (SSO) scenarios where a user logs in once and gains access to multiple systems without being prompted to log in again.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT Best Practices</h2>
+                    
+                    <h3>Security</h3>
+                    <ol>
+                        <li>
+                            <strong>Use HTTPS</strong>: Always transmit JWTs over HTTPS to prevent token theft through network eavesdropping.
+                        </li>
+                        <li>
+                            <strong>Set Proper Expiration</strong>: Use short-lived tokens (minutes to hours, not days) to minimize the damage if a token is compromised.
+                        </li>
+                        <li>
+                            <strong>Validate All Claims</strong>: Always validate the issuer, audience, expiration, and other claims.
+                        </li>
+                        <li>
+                            <strong>Use Strong Secrets/Keys</strong>: For HMAC algorithms, use a strong, randomly generated secret. For RSA/ECDSA, use proper key lengths.
+                        </li>
+                        <li>
+                            <strong>Consider Using Refresh Tokens</strong>: Implement a refresh token system for obtaining new access tokens without requiring the user to re-authenticate.
+                        </li>
+                    </ol>
+                    
+                    <h3>Implementation</h3>
+                    <ol>
+                        <li>
+                            <strong>Don't Store Sensitive Data</strong>: JWTs are not encrypted by default, so don't store sensitive information in the payload.
+                        </li>
+                        <li>
+                            <strong>Implement Token Revocation</strong>: Have a strategy for revoking tokens when needed (user logout, password change, etc.).
+                        </li>
+                        <li>
+                            <strong>Use Appropriate Algorithms</strong>: Prefer asymmetric algorithms (RS256, ES256) over symmetric ones (HS256) for production systems with multiple verification points.
+                        </li>
+                        <li>
+                            <strong>Validate Input</strong>: Always validate and sanitize user input before including it in a JWT.
+                        </li>
+                        <li>
+                            <strong>Handle Errors Securely</strong>: Don't expose detailed error messages that might help an attacker.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JWT Libraries</h2>
+                    
+                    <div class="library-list">
+                        <div class="library-item">
+                            <h3>JavaScript/Node.js</h3>
+                            <ul>
+                                <li><a href="https://github.com/auth0/node-jsonwebtoken" target="_blank">jsonwebtoken</a></li>
+                                <li><a href="https://github.com/panva/jose" target="_blank">jose</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="library-item">
+                            <h3>Python</h3>
+                            <ul>
+                                <li><a href="https://github.com/jpadilla/pyjwt" target="_blank">PyJWT</a></li>
+                                <li><a href="https://github.com/mpdavis/python-jose" target="_blank">python-jose</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="library-item">
+                            <h3>Java</h3>
+                            <ul>
+                                <li><a href="https://github.com/jwtk/jjwt" target="_blank">jjwt</a></li>
+                                <li><a href="https://github.com/auth0/java-jwt" target="_blank">java-jwt</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="library-item">
+                            <h3>.NET</h3>
+                            <ul>
+                                <li><a href="https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/" target="_blank">System.IdentityModel.Tokens.Jwt</a></li>
+                                <li><a href="https://github.com/jwt-dotnet/jwt" target="_blank">JWT.NET</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="library-item">
+                            <h3>PHP</h3>
+                            <ul>
+                                <li><a href="https://github.com/firebase/php-jwt" target="_blank">firebase/php-jwt</a></li>
+                                <li><a href="https://github.com/lcobucci/jwt" target="_blank">lcobucci/jwt</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="library-item">
+                            <h3>Ruby</h3>
+                            <ul>
+                                <li><a href="https://github.com/jwt/ruby-jwt" target="_blank">ruby-jwt</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        JWTs provide a powerful, standardized way to handle authentication and authorization in modern applications. By understanding their structure, capabilities, and security considerations, you can implement them effectively and securely in your projects.
+                    </p>
+                    <p>
+                        Remember that while JWTs offer many advantages, they're not a silver bullet for all authentication scenarios. Consider your specific requirements and security needs when deciding whether to use JWTs or alternative authentication mechanisms.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <div class="next-links">
+                            <a href="jwt-vulnerabilities-guide.html" class="next-link">
+                                <i class="fas fa-user-secret"></i>
+                                <span>Explore JWT Vulnerabilities</span>
+                            </a>
+                            <a href="secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Learn Secure Implementation</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="js/docs.js"></script>
+</body>
+</html>

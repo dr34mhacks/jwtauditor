@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- Generated for JWTAuditor.com -->
+
+<!-- Main Pages -->
+<url>
+  <loc>https://jwtauditor.com/</loc>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/about.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<!-- Documentation Hub -->
+<url>
+  <loc>https://jwtauditor.com/docs/</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<!-- Educational Content -->
+<url>
+  <loc>https://jwtauditor.com/docs/jwt-fundamentals.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/jwt-vulnerabilities-guide.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/secure-jwt-implementation.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/jwt-vs-sessions.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/jwt-claims.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/jwt-attack-techniques.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<!-- Tool Guides -->
+<url>
+  <loc>https://jwtauditor.com/docs/tool-guides/decoder-analyzer.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/tool-guides/secret-bruteforcer.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/tool-guides/jwt-editor.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/tool-guides/jwt-generator.html</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<!-- Reference Materials -->
+<url>
+  <loc>https://jwtauditor.com/docs/reference/jwt-algorithms.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.6</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/reference/jwt-claim-registry.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.6</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+<url>
+  <loc>https://jwtauditor.com/docs/reference/jwt-header-parameters.html</loc>
+  <changefreq>yearly</changefreq>
+  <priority>0.6</priority>
+  <lastmod>2025-01-08</lastmod>
+</url>
+
+</urlset>

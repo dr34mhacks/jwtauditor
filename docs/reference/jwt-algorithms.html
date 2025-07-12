@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Algorithms Reference - JWTAuditor</title>
+    <meta name="description" content="Comprehensive reference guide to JWT signing and encryption algorithms, including HMAC, RSA, ECDSA, and more.">
+    <meta name="keywords" content="JWT, algorithms, HS256, RS256, ES256, PS256, encryption, signing">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="../tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="../tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="../tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="../tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="jwt-algorithms.html" class="active">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Algorithms Reference</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-book"></i> Reference Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 10 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        JWT algorithms are used for signing and encrypting tokens. This reference guide provides detailed information about the various algorithms supported by the JWT standard, their security characteristics, and recommendations for their use.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Algorithm Categories</h2>
+                    
+                    <p>JWT algorithms fall into several categories based on their purpose and cryptographic approach:</p>
+                    
+                    <div class="algorithm-categories">
+                        <div class="algorithm-category">
+                            <h3><i class="fas fa-signature"></i> Signature Algorithms</h3>
+                            <p>Used to sign JWTs to ensure integrity and authenticity.</p>
+                        </div>
+                        
+                        <div class="algorithm-category">
+                            <h3><i class="fas fa-lock"></i> Encryption Algorithms</h3>
+                            <p>Used to encrypt JWTs to ensure confidentiality (JWE).</p>
+                        </div>
+                        
+                        <div class="algorithm-category">
+                            <h3><i class="fas fa-key"></i> Key Management Algorithms</h3>
+                            <p>Used to encrypt or agree upon keys for JWE.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Signature Algorithms (JWS)</h2>
+                    
+                    <p>
+                        JSON Web Signature (JWS) algorithms are used to sign JWTs. The signature is created using the header and payload of the JWT, ensuring that the token hasn't been tampered with.
+                    </p>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Algorithm</th>
+                                    <th>Description</th>
+                                    <th>Key Type</th>
+                                    <th>Security Level</th>
+                                    <th>Recommended</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>none</code></td>
+                                    <td>No signature (unsecured JWT)</td>
+                                    <td>None</td>
+                                    <td class="security-low">Very Low</td>
+                                    <td><i class="fas fa-times text-danger"></i> Never use in production</td>
+                                </tr>
+                                <tr>
+                                    <td><code>HS256</code></td>
+                                    <td>HMAC with SHA-256</td>
+                                    <td>Symmetric</td>
+                                    <td class="security-medium">Medium</td>
+                                    <td><i class="fas fa-check text-success"></i> With strong secret</td>
+                                </tr>
+                                <tr>
+                                    <td><code>HS384</code></td>
+                                    <td>HMAC with SHA-384</td>
+                                    <td>Symmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> With strong secret</td>
+                                </tr>
+                                <tr>
+                                    <td><code>HS512</code></td>
+                                    <td>HMAC with SHA-512</td>
+                                    <td>Symmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> With strong secret</td>
+                                </tr>
+                                <tr>
+                                    <td><code>RS256</code></td>
+                                    <td>RSASSA-PKCS1-v1_5 with SHA-256</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>RS384</code></td>
+                                    <td>RSASSA-PKCS1-v1_5 with SHA-384</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>RS512</code></td>
+                                    <td>RSASSA-PKCS1-v1_5 with SHA-512</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ES256</code></td>
+                                    <td>ECDSA with P-256 and SHA-256</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ES384</code></td>
+                                    <td>ECDSA with P-384 and SHA-384</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ES512</code></td>
+                                    <td>ECDSA with P-521 and SHA-512</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PS256</code></td>
+                                    <td>RSASSA-PSS with SHA-256</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PS384</code></td>
+                                    <td>RSASSA-PSS with SHA-384</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PS512</code></td>
+                                    <td>RSASSA-PSS with SHA-512</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                                <tr>
+                                    <td><code>EdDSA</code></td>
+                                    <td>Edwards-curve Digital Signature Algorithm</td>
+                                    <td>Asymmetric</td>
+                                    <td class="security-high">High</td>
+                                    <td><i class="fas fa-check text-success"></i> Recommended</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Algorithm Characteristics</h2>
+                    
+                    <h3>HMAC Algorithms (HS256, HS384, HS512)</h3>
+                    <ul>
+                        <li><strong>Type:</strong> Symmetric key algorithms</li>
+                        <li><strong>Key Requirements:</strong> Same secret key for both signing and verification</li>
+                        <li><strong>Advantages:</strong> Fast, simple implementation</li>
+                        <li><strong>Disadvantages:</strong> Secret must be shared between all parties that sign or verify tokens</li>
+                        <li><strong>Use Case:</strong> Single server environments or tightly controlled microservices</li>
+                        <li><strong>Security Considerations:</strong> Secret must be strong and kept secure</li>
+                    </ul>
+                    
+                    <h3>RSA Algorithms (RS256, RS384, RS512)</h3>
+                    <ul>
+                        <li><strong>Type:</strong> Asymmetric key algorithms</li>
+                        <li><strong>Key Requirements:</strong> Private key for signing, public key for verification</li>
+                        <li><strong>Advantages:</strong> Public key can be distributed widely without compromising security</li>
+                        <li><strong>Disadvantages:</strong> Slower than HMAC, larger signatures</li>
+                        <li><strong>Use Case:</strong> Multi-server environments, public-facing APIs</li>
+                        <li><strong>Security Considerations:</strong> Private key must be kept secure</li>
+                    </ul>
+                    
+                    <h3>ECDSA Algorithms (ES256, ES384, ES512)</h3>
+                    <ul>
+                        <li><strong>Type:</strong> Asymmetric key algorithms based on elliptic curves</li>
+                        <li><strong>Key Requirements:</strong> Private key for signing, public key for verification</li>
+                        <li><strong>Advantages:</strong> Smaller keys and signatures than RSA for equivalent security</li>
+                        <li><strong>Disadvantages:</strong> Implementation complexity, potential patent issues in some jurisdictions</li>
+                        <li><strong>Use Case:</strong> Mobile applications, environments with bandwidth constraints</li>
+                        <li><strong>Security Considerations:</strong> Requires secure random number generation</li>
+                    </ul>
+                    
+                    <h3>RSASSA-PSS Algorithms (PS256, PS384, PS512)</h3>
+                    <ul>
+                        <li><strong>Type:</strong> Asymmetric key algorithms (improved RSA)</li>
+                        <li><strong>Key Requirements:</strong> Private key for signing, public key for verification</li>
+                        <li><strong>Advantages:</strong> More secure than RSASSA-PKCS1-v1_5 (RS*) against certain attacks</li>
+                        <li><strong>Disadvantages:</strong> Less widely supported than RS* algorithms</li>
+                        <li><strong>Use Case:</strong> High-security environments</li>
+                        <li><strong>Security Considerations:</strong> Preferred over RS* when supported</li>
+                    </ul>
+                    
+                    <h3>EdDSA Algorithm</h3>
+                    <ul>
+                        <li><strong>Type:</strong> Asymmetric key algorithm based on Edwards curves</li>
+                        <li><strong>Key Requirements:</strong> Private key for signing, public key for verification</li>
+                        <li><strong>Advantages:</strong> Fast, secure, resistant to side-channel attacks</li>
+                        <li><strong>Disadvantages:</strong> Newer, less widely supported</li>
+                        <li><strong>Use Case:</strong> High-security environments, modern applications</li>
+                        <li><strong>Security Considerations:</strong> Excellent security properties</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Algorithm Selection Guidelines</h2>
+                    
+                    <h3>Recommended Algorithms</h3>
+                    <p>
+                        For most applications, we recommend the following algorithms:
+                    </p>
+                    <ul>
+                        <li><strong>Single-server applications:</strong> HS256 with a strong secret (at least 256 bits)</li>
+                        <li><strong>Multi-server or public-facing applications:</strong> RS256, ES256, or PS256</li>
+                        <li><strong>High-security applications:</strong> ES384, PS384, or EdDSA</li>
+                    </ul>
+                    
+                    <h3>Algorithms to Avoid</h3>
+                    <ul>
+                        <li><strong>none:</strong> Never use the "none" algorithm in production</li>
+                        <li><strong>HS256 with weak secrets:</strong> Avoid using passwords, dictionary words, or short strings as secrets</li>
+                    </ul>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Warning:</strong> Always ensure your JWT library explicitly rejects the "none" algorithm, as this is a common security vulnerability.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Key Size Recommendations</h2>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Algorithm</th>
+                                    <th>Minimum Key Size</th>
+                                    <th>Recommended Key Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HMAC (HS256, HS384, HS512)</td>
+                                    <td>Same as hash output length</td>
+                                    <td>≥ 256 bits (32 bytes)</td>
+                                </tr>
+                                <tr>
+                                    <td>RSA (RS256, RS384, RS512, PS256, PS384, PS512)</td>
+                                    <td>2048 bits</td>
+                                    <td>3072 or 4096 bits</td>
+                                </tr>
+                                <tr>
+                                    <td>ECDSA (ES256)</td>
+                                    <td>P-256 (256 bits)</td>
+                                    <td>P-256 (256 bits)</td>
+                                </tr>
+                                <tr>
+                                    <td>ECDSA (ES384)</td>
+                                    <td>P-384 (384 bits)</td>
+                                    <td>P-384 (384 bits)</td>
+                                </tr>
+                                <tr>
+                                    <td>ECDSA (ES512)</td>
+                                    <td>P-521 (521 bits)</td>
+                                    <td>P-521 (521 bits)</td>
+                                </tr>
+                                <tr>
+                                    <td>EdDSA (Ed25519)</td>
+                                    <td>255 bits</td>
+                                    <td>255 bits</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Algorithm Implementation Examples</h2>
+                    
+                    <h3>Node.js Example (jsonwebtoken library)</h3>
+                    <pre><code class="language-javascript">const jwt = require('jsonwebtoken');
+
+// HS256 (HMAC with SHA-256)
+const hmacSecret = 'your-strong-secret-key-at-least-32-characters';
+const hmacToken = jwt.sign({ sub: 'user123' }, hmacSecret, { algorithm: 'HS256' });
+
+// RS256 (RSA with SHA-256)
+const privateKey = fs.readFileSync('private.key');
+const rsaToken = jwt.sign({ sub: 'user123' }, privateKey, { algorithm: 'RS256' });
+
+// ES256 (ECDSA with P-256 and SHA-256)
+const ecPrivateKey = fs.readFileSync('ec-private.key');
+const ecdsaToken = jwt.sign({ sub: 'user123' }, ecPrivateKey, { algorithm: 'ES256' });</code></pre>
+                    
+                    <h3>Python Example (PyJWT library)</h3>
+                    <pre><code class="language-python">import jwt
+import datetime
+
+# HS256 (HMAC with SHA-256)
+hmac_secret = 'your-strong-secret-key-at-least-32-characters'
+hmac_token = jwt.encode(
+    {'sub': 'user123', 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+    hmac_secret,
+    algorithm='HS256'
+)
+
+# RS256 (RSA with SHA-256)
+with open('private.key', 'r') as f:
+    private_key = f.read()
+    
+rsa_token = jwt.encode(
+    {'sub': 'user123', 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+    private_key,
+    algorithm='RS256'
+)</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        Choosing the right JWT algorithm is crucial for the security of your application. Consider your specific requirements, security needs, and deployment environment when selecting an algorithm.
+                    </p>
+                    <p>
+                        For most applications, asymmetric algorithms like RS256 or ES256 provide a good balance of security and usability. Always ensure you're using appropriate key sizes and following best practices for key management.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Related Resources</h3>
+                        <div class="next-links">
+                            <a href="../secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Secure JWT Implementation</span>
+                            </a>
+                            <a href="../jwt-vulnerabilities-guide.html" class="next-link">
+                                <i class="fas fa-user-secret"></i>
+                                <span>JWT Vulnerabilities Guide</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize syntax highlighting
+            hljs.highlightAll();
+            
+            // Mobile sidebar toggle
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.docs-sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

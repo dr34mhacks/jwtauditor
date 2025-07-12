@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT vs. Session Authentication - JWTAuditor</title>
+    <meta name="description" content="Compare JWT-based authentication with traditional session-based authentication, including pros, cons, and use cases for each approach.">
+    <meta name="keywords" content="JWT, session authentication, stateless, stateful, cookies, tokens">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+</head>
+<body class="docs-body">
+    <header>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+            <h1>JWTAuditor</h1>
+        </div>
+        <div class="subtitle">Documentation & Learning Resources</div>
+        <div class="header-actions">
+            <a href="../index.html" class="header-btn tool-btn"><i class="fas fa-tools"></i> Back to Tool</a>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <div class="sidebar-header">
+                    <h2>Documentation</h2>
+                </div>
+                <nav class="docs-nav">
+                    <div class="nav-section">
+                        <h3>JWT Fundamentals</h3>
+                        <ul>
+                            <li><a href="jwt-fundamentals.html">Understanding JWT Structure</a></li>
+                            <li><a href="jwt-claims.html">JWT Claims Explained</a></li>
+                            <li><a href="jwt-vs-sessions.html" class="active">JWT vs. Session Auth</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Security Guides</h3>
+                        <ul>
+                            <li><a href="jwt-vulnerabilities-guide.html">JWT Vulnerabilities Guide</a></li>
+                            <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                            <li><a href="jwt-attack-techniques.html">Attack Techniques</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Tool Guides</h3>
+                        <ul>
+                            <li><a href="tool-guides/decoder-analyzer.html">Decoder & Analyzer</a></li>
+                            <li><a href="tool-guides/secret-bruteforcer.html">Secret Bruteforcer</a></li>
+                            <li><a href="tool-guides/jwt-editor.html">JWT Editor</a></li>
+                            <li><a href="tool-guides/jwt-generator.html">JWT Generator</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-section">
+                        <h3>Reference</h3>
+                        <ul>
+                            <li><a href="reference/jwt-header-parameters.html">Header Parameters</a></li>
+                            <li><a href="reference/jwt-claim-registry.html">Claim Registry</a></li>
+                            <li><a href="reference/jwt-algorithms.html">JWT Algorithms</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>JWT vs. Session Authentication</h1>
+                    <div class="docs-meta">
+                        <span><i class="fas fa-exchange-alt"></i> Comparison Guide</span>
+                        <span><i class="fas fa-clock"></i> Reading time: 10 min</span>
+                    </div>
+                </div>
+
+                <div class="docs-section intro-section">
+                    <p class="lead">
+                        Authentication is a critical component of web applications, and two popular approaches are JWT-based authentication and traditional session-based authentication. This guide compares these two methods, highlighting their differences, advantages, disadvantages, and appropriate use cases.
+                    </p>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Overview of Authentication Methods</h2>
+                    
+                    <div class="comparison-cards">
+                        <div class="comparison-card">
+                            <div class="card-header">
+                                <i class="fas fa-cookie"></i>
+                                <h3>Session-Based Authentication</h3>
+                            </div>
+                            <div class="card-content">
+                                <p>Traditional authentication method where the server maintains session state and issues a session ID to the client, typically stored in a cookie.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <div class="card-header">
+                                <i class="fas fa-key"></i>
+                                <h3>JWT-Based Authentication</h3>
+                            </div>
+                            <div class="card-content">
+                                <p>Modern authentication method where the server issues a signed token containing user information, which the client includes in subsequent requests.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>How They Work</h2>
+                    
+                    <h3>Session-Based Authentication</h3>
+                    <ol>
+                        <li>User logs in with credentials</li>
+                        <li>Server verifies credentials and creates a session</li>
+                        <li>Server stores session data in memory or database</li>
+                        <li>Server sends a session ID to the client (usually in a cookie)</li>
+                        <li>Client includes the session ID in subsequent requests</li>
+                        <li>Server validates the session ID and retrieves session data</li>
+                        <li>When user logs out, server invalidates the session</li>
+                    </ol>
+                    
+                    <div class="flow-diagram-container">
+                        <img src="img/session-auth-flow.png" alt="Session Authentication Flow" class="flow-diagram">
+                    </div>
+                    
+                    <h3>JWT-Based Authentication</h3>
+                    <ol>
+                        <li>User logs in with credentials</li>
+                        <li>Server verifies credentials and creates a JWT</li>
+                        <li>JWT contains encoded user data and is signed by the server</li>
+                        <li>Server sends the JWT to the client</li>
+                        <li>Client stores the JWT (localStorage, sessionStorage, or cookie)</li>
+                        <li>Client includes the JWT in subsequent requests (Authorization header)</li>
+                        <li>Server validates the JWT signature and extracts user data</li>
+                        <li>When token expires, client needs to request a new one</li>
+                    </ol>
+                    
+                    <div class="flow-diagram-container">
+                        <img src="img/jwt-auth-flow.png" alt="JWT Authentication Flow" class="flow-diagram">
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Key Differences</h2>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Session-Based Auth</th>
+                                    <th>JWT-Based Auth</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>State Management</td>
+                                    <td>Stateful (server stores session data)</td>
+                                    <td>Stateless (server doesn't store token data)</td>
+                                </tr>
+                                <tr>
+                                    <td>Storage Location</td>
+                                    <td>Server-side (database, cache, memory)</td>
+                                    <td>Client-side (token contains all necessary data)</td>
+                                </tr>
+                                <tr>
+                                    <td>Scalability</td>
+                                    <td>Requires session synchronization across servers</td>
+                                    <td>Easily scalable (no server-side state)</td>
+                                </tr>
+                                <tr>
+                                    <td>Token Size</td>
+                                    <td>Small (just a reference ID)</td>
+                                    <td>Larger (contains encoded user data)</td>
+                                </tr>
+                                <tr>
+                                    <td>Security</td>
+                                    <td>Session ID is opaque (no data exposure)</td>
+                                    <td>Payload is encoded but not encrypted (potential data exposure)</td>
+                                </tr>
+                                <tr>
+                                    <td>Revocation</td>
+                                    <td>Easy (delete session from server)</td>
+                                    <td>Difficult (requires blacklist or short expiration)</td>
+                                </tr>
+                                <tr>
+                                    <td>Cross-Domain</td>
+                                    <td>Challenging (CORS issues with cookies)</td>
+                                    <td>Easier (can be sent in Authorization header)</td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile/IoT Support</td>
+                                    <td>Less suitable (cookie management issues)</td>
+                                    <td>Well-suited (easy to include in headers)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Advantages and Disadvantages</h2>
+                    
+                    <h3>Session-Based Authentication</h3>
+                    
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4><i class="fas fa-plus-circle"></i> Advantages</h4>
+                            <ul>
+                                <li>Complete control over sessions (can invalidate at any time)</li>
+                                <li>Smaller payload size (only sends session ID)</li>
+                                <li>Session data can be changed without affecting the client</li>
+                                <li>More secure for sensitive operations (no data exposure)</li>
+                                <li>Well-established, mature approach</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="cons">
+                            <h4><i class="fas fa-minus-circle"></i> Disadvantages</h4>
+                            <ul>
+                                <li>Requires server-side storage (memory, database)</li>
+                                <li>Scaling challenges (session synchronization across servers)</li>
+                                <li>CORS complications with cookies</li>
+                                <li>Less suitable for modern architectures (microservices, serverless)</li>
+                                <li>Session management overhead</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>JWT-Based Authentication</h3>
+                    
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4><i class="fas fa-plus-circle"></i> Advantages</h4>
+                            <ul>
+                                <li>Stateless (no server-side storage required)</li>
+                                <li>Highly scalable (works well with distributed systems)</li>
+                                <li>Cross-domain friendly (easy to use with multiple services)</li>
+                                <li>Contains user data (reduces database lookups)</li>
+                                <li>Well-suited for modern architectures (microservices, APIs)</li>
+                                <li>Works well for mobile and IoT applications</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="cons">
+                            <h4><i class="fas fa-minus-circle"></i> Disadvantages</h4>
+                            <ul>
+                                <li>Difficult to invalidate tokens before expiration</li>
+                                <li>Payload size can become large</li>
+                                <li>Data in token cannot be changed until new token is issued</li>
+                                <li>Potential security risks if not implemented correctly</li>
+                                <li>Payload data is visible (though encoded) to the client</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>When to Use Each Approach</h2>
+                    
+                    <h3>Use Session-Based Authentication When:</h3>
+                    <ul>
+                        <li>You need absolute control over user sessions</li>
+                        <li>Your application handles highly sensitive data</li>
+                        <li>You need to store complex session state</li>
+                        <li>You have a monolithic application architecture</li>
+                        <li>You need to track user activity closely</li>
+                        <li>Immediate session invalidation is a requirement</li>
+                    </ul>
+                    
+                    <h3>Use JWT-Based Authentication When:</h3>
+                    <ul>
+                        <li>You're building stateless, scalable services</li>
+                        <li>You have a microservices architecture</li>
+                        <li>You need cross-domain authentication</li>
+                        <li>You're developing mobile or IoT applications</li>
+                        <li>You want to reduce database lookups</li>
+                        <li>You need to pass authentication between different services</li>
+                    </ul>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Best Practices</h2>
+                    
+                    <h3>Session-Based Authentication Best Practices</h3>
+                    <ol>
+                        <li>Use secure, HttpOnly, and SameSite cookies</li>
+                        <li>Implement CSRF protection</li>
+                        <li>Generate strong, random session IDs</li>
+                        <li>Set appropriate session timeouts</li>
+                        <li>Implement session rotation on privilege changes</li>
+                        <li>Use a reliable session store (Redis, database)</li>
+                        <li>Provide session invalidation on logout</li>
+                    </ol>
+                    
+                    <h3>JWT-Based Authentication Best Practices</h3>
+                    <ol>
+                        <li>Keep tokens short-lived (15-30 minutes)</li>
+                        <li>Implement refresh token rotation</li>
+                        <li>Use strong signing algorithms (RS256, ES256)</li>
+                        <li>Include only necessary claims in the payload</li>
+                        <li>Validate tokens properly on the server</li>
+                        <li>Store tokens securely on the client</li>
+                        <li>Implement a token blacklist for critical invalidations</li>
+                        <li>Always use HTTPS for token transmission</li>
+                    </ol>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Hybrid Approaches</h2>
+                    <p>
+                        Many modern applications use hybrid approaches that combine the benefits of both methods:
+                    </p>
+                    
+                    <h3>JWT with Server-Side Storage</h3>
+                    <p>
+                        Use JWTs but also maintain a reference to them on the server, allowing for explicit invalidation while still benefiting from the JWT's self-contained nature.
+                    </p>
+                    
+                    <h3>Short-Lived JWTs with Refresh Tokens</h3>
+                    <p>
+                        Use short-lived JWTs (access tokens) for API access, combined with longer-lived refresh tokens that are stored server-side and can be invalidated.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="info-content">
+                            <p><strong>Tip:</strong> The refresh token approach provides a good balance between the statelessness of JWTs and the control of session-based authentication.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <h2>Conclusion</h2>
+                    <p>
+                        Both session-based and JWT-based authentication have their place in modern web development. The choice between them depends on your specific application requirements, architecture, and security needs.
+                    </p>
+                    <p>
+                        For many applications, a hybrid approach using short-lived JWTs with server-side refresh tokens provides the best balance of security, scalability, and control.
+                    </p>
+                    
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <div class="next-links">
+                            <a href="secure-jwt-implementation.html" class="next-link">
+                                <i class="fas fa-lock"></i>
+                                <span>Learn Secure JWT Implementation</span>
+                            </a>
+                            <a href="jwt-vulnerabilities-guide.html" class="next-link">
+                                <i class="fas fa-user-secret"></i>
+                                <span>Explore JWT Vulnerabilities</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>JWTAuditor</h3>
+                <p>Professional JWT security testing platform for penetration testers and cybersecurity professionals. Decode, analyze vulnerabilities, and audit JSON Web Token implementations with complete client-side privacy.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Documentation</h3>
+                <ul class="footer-links">
+                    <li><a href="jwt-fundamentals.html">JWT Fundamentals</a></li>
+                    <li><a href="jwt-vulnerabilities-guide.html">Vulnerabilities Guide</a></li>
+                    <li><a href="secure-jwt-implementation.html">Secure Implementation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="https://jwt.io/" target="_blank">JWT.io</a></li>
+                    <li><a href="https://portswigger.net/web-security/jwt" target="_blank">PortSwigger JWT Attacks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+<p>&copy; 2025 A Project by 
+  <a href="https://github.com/dr34mhacks" style="color: var(--primary-color);">Sid</a> & 
+  <a href="https://github.com/thecybersandeep" style="color: var(--primary-color);">Sandeep</a> • 
+  Backed by <a href="https://infosecmania.com" target="_blank" style="color: var(--primary-color);">Infosecmania.com</a>
+</p>            <div class="social-links">
+                <a href="https://x.com/infosecmania" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/infosecmania" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/dr34mhacks/jwtauditor" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize syntax highlighting
+            hljs.highlightAll();
+            
+            // Mobile sidebar toggle
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.docs-sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

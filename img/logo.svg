@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#55efc4;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main shield -->
+  <path d="M 20 60 Q 20 40 40 40 L 160 40 Q 180 40 180 60 L 180 120 Q 180 160 100 180 Q 20 160 20 120 Z" fill="url(#logoGradient)" filter="url(#glow)"/>
+  
+  <!-- Lock body -->
+  <rect x="70" y="90" width="60" height="50" rx="8" fill="#0d1117"/>
+  
+  <!-- Lock hole -->
+  <circle cx="100" cy="105" r="10" fill="url(#logoGradient)"/>
+  <rect x="95" y="105" width="10" height="20" fill="url(#logoGradient)"/>
+  
+  <!-- Lock shackle -->
+  <path d="M 80 90 Q 80 65 100 65 Q 120 65 120 90" fill="none" stroke="#0d1117" stroke-width="8"/>
+  
+  <!-- JWT text -->
+  <text x="100" y="170" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#0d1117" text-anchor="middle">JWT</text>
+</svg>
